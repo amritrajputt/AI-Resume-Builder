@@ -4,6 +4,8 @@ import { ApiResponse } from "../../common/responses/ApiResponses";
 import { ApiError } from "../../common/errors/ApiError";
 import { DataService } from "./data.service";
 import { getAuth } from "@clerk/express";
+import { inngest } from "../../inngest/client";
+import * as z from "zod";
 export class DataController {
     static async getData(req: Request, res: Response, next: NextFunction) {
         try {
@@ -27,7 +29,7 @@ export class DataController {
             if (!auth.isAuthenticated || !auth.userId) {
                 throw ApiError.unauthorized();
             }
-            const savedResume = await DataService.saveData({ ...validatedData, userId: auth.userId });
+            const savedResume = await DataService.saveData(validatedData, auth.userId);
             const response = ApiResponse.created(savedResume, "Data saved successfully");
             return res.status(response.statusCode).json(response);
         } catch (err) {
@@ -55,5 +57,37 @@ export class DataController {
         } catch (err) {
             next(err);
         }
+    }
+
+    static async generate(req: Request, res: Response, next: NextFunction) {
+        try {
+            const auth = getAuth(req);
+            if (!auth.isAuthenticated || !auth.userId) throw ApiError.unauthorized();
+            const resumeId = z.string().uuid().parse(req.body.resumeId);
+            const message = z.string().min(1).max(4000).parse(req.body.message);
+            const job = await DataService.createGenerationJob(resumeId, auth.userId, message);
+            await inngest.send({ name: "app/texcode", data: { jobId: job.id, resumeId, userId: auth.userId, message } });
+            return res.status(202).json(ApiResponse.accepted({ jobId: job.id, status: job.status }, "Resume generation queued"));
+        } catch (err) { next(err); }
+    }
+
+    static async getGenerationStatus(req: Request, res: Response, next: NextFunction) {
+        try {
+            const auth = getAuth(req);
+            if (!auth.isAuthenticated || !auth.userId) throw ApiError.unauthorized();
+            if (typeof req.params.id !== "string") throw ApiError.badRequest("A valid generation id is required");
+            const job = await DataService.getGenerationJob(req.params.id, auth.userId);
+            return res.json(ApiResponse.ok(job, "Generation status retrieved"));
+        } catch (err) { next(err); }
+    }
+
+    static async getPdf(req: Request, res: Response, next: NextFunction) {
+        try {
+            const auth = getAuth(req);
+            if (!auth.isAuthenticated || !auth.userId) throw ApiError.unauthorized();
+            if (typeof req.params.id !== "string") throw ApiError.badRequest("A valid resume id is required");
+            const pdf = await DataService.getPdfFile(req.params.id, auth.userId);
+            res.type("application/pdf").send(pdf);
+        } catch (err) { next(err); }
     }
 }
