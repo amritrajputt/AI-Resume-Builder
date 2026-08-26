@@ -2,11 +2,15 @@ import { pgTable, text, jsonb, uuid, varchar, timestamp, uniqueIndex } from 'dri
 
 export const users = pgTable("users", {
     id: uuid("id").primaryKey().defaultRandom(),
+    clerkId: varchar("clerk_id", { length: 255 }).notNull(),
     name: varchar("name", { length: 255 }).notNull(),
     email: varchar("email", { length: 255 }).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
-});
+}, (table) => ({
+    clerkIdUnique: uniqueIndex("users_clerk_id_unique").on(table.clerkId),
+    emailUnique: uniqueIndex("users_email_unique").on(table.email),
+}));
 
 
 
@@ -142,3 +146,15 @@ export const resumesPdfFile = pgTable("resumes_pdf_file", {
 }, (table) => ({
     resumeIdUnique: uniqueIndex("resumes_pdf_file_resume_id_unique").on(table.resumeId),
 }));
+
+export const generationJobs = pgTable("generation_jobs", {
+    id: uuid("id").primaryKey().defaultRandom(),
+    resumeId: uuid("resume_id").notNull().references(() => resumes.id, { onDelete: "cascade" }),
+    userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    message: text("message").notNull(),
+    status: varchar("status", { length: 32 }).notNull().default("queued"),
+    errorMessage: text("error_message"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+    completedAt: timestamp("completed_at", { withTimezone: true }),
+});
