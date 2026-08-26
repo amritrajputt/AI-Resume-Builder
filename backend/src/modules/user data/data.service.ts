@@ -35,37 +35,46 @@ export class DataService {
         return updatedResume;
     }
 
-    static async saveTexFile(userId: string, texFile: string) {
-        const userResumes = await db
+    static async saveTexFile(resumeId: string, userId: string, texFile: string) {
+        const [ownedResume] = await db
             .select({ id: resumes.id })
             .from(resumes)
-            .where(eq(resumes.userId, userId));
+            .where(and(eq(resumes.id, resumeId), eq(resumes.userId, userId)));
 
-        if (userResumes.length === 0) {
-            return [];
+        if (!ownedResume) {
+            return undefined;
         }
 
-        return db.insert(resumesTexFile).values(
-            userResumes.map(({ id: resumeId }) => ({ resumeId, texFile }))
-        ).onConflictDoUpdate({
-            target: resumesTexFile.resumeId,
-            set: { texFile },
-            where: sql`${resumesTexFile.texFile} is distinct from ${texFile}`,
-        }).returning();
+        const [savedTexFile] = await db.insert(resumesTexFile)
+            .values({ resumeId, texFile })
+            .onConflictDoUpdate({
+                target: resumesTexFile.resumeId,
+                set: { texFile },
+                where: sql`${resumesTexFile.texFile} is distinct from ${texFile}`,
+            })
+            .returning();
+
+        return savedTexFile;
     }
 
-    static async savePdfFile(userId: string, pdfFile: string) {
-        const userResumes = await db
+    static async savePdfFile(resumeId: string, userId: string, pdfFile: string) {
+        const [ownedResume] = await db
             .select({ id: resumes.id })
             .from(resumes)
-            .where(eq(resumes.userId, userId));
+            .where(and(eq(resumes.id, resumeId), eq(resumes.userId, userId)));
 
-        if (userResumes.length === 0) {
-            return [];
+        if (!ownedResume) {
+            return undefined;
         }
 
-        return db.insert(resumesPdfFile).values(
-            userResumes.map(({ id: resumeId }) => ({ resumeId, pdfFile }))
-        ).returning();
+        const [savedPdfFile] = await db.insert(resumesPdfFile)
+            .values({ resumeId, pdfFile })
+            .onConflictDoUpdate({
+                target: resumesPdfFile.resumeId,
+                set: { pdfFile },
+            })
+            .returning();
+
+        return savedPdfFile;
     }
  }
