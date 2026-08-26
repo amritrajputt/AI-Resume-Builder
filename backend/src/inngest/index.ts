@@ -1,9 +1,9 @@
-import { Inngest } from "inngest";
 import { TexSandboxService } from "../common/services/tex-sandbox.service";
 import { DataService } from "../modules/user data/data.service";
 import { resumeSystemPrompt } from "./system-prompt";
+import { inngest } from "./client";
 
-export const inngest = new Inngest({ id: "resume-builder" });
+export { inngest };
 const getCode = inngest.createFunction(
     { id: "get-code", triggers: { event: "app/texcode" }, retries: 5 },
     async ({ event, step }) => {
@@ -35,22 +35,46 @@ const getCode = inngest.createFunction(
             .filter(Boolean)
             .join("\n");
 
-        await step.run("save-resume-tex-file", () =>
-            DataService.saveTexFile(event.data.userId, generatedTex)
+        const savedTexFile = await step.run("save-resume-tex-file", () =>
+            DataService.saveTexFile(event.data.resumeId, event.data.userId, generatedTex)
         );
 
-        const pdfFile = await step.run("compile-resume-tex", () =>
-            TexSandboxService.compile(generatedTex)
+        if (savedTexFile) {
+            await step.sendEvent("queue-tex-compilation", {
+                name: "resume/compile.requested",
+                data: {
+                    resumeId: event.data.resumeId,
+                    userId: event.data.userId,
+                    texFile: generatedTex,
+                },
+            });
+        }
+
+        return { generatedTex, status: savedTexFile ? "queued" : "resume-not-found" };
+    }
+);
+
+export const compileResumeTex = inngest.createFunction(
+    {
+        id: "compile-resume-tex",
+        triggers: { event: "resume/compile.requested" },
+        concurrency: { limit: 6 },
+        retries: 1,
+    },
+    async ({ event, step }) => {
+        const pdfBase64 = await step.run("compile-latex", () =>
+            TexSandboxService.compile(event.data.texFile)
         );
 
         await step.run("save-resume-pdf-file", () =>
-            DataService.savePdfFile(event.data.userId, pdfFile)
+            DataService.savePdfFile(event.data.resumeId, event.data.userId, pdfBase64)
         );
 
-        return { generatedTex, pdfFile };
+        return { resumeId: event.data.resumeId, status: "completed" };
     }
 );
 
 export const functions = [
-    getCode
+    getCode,
+    compileResumeTex,
 ];
