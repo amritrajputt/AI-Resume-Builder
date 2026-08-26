@@ -7,9 +7,17 @@ export { inngest };
 const getCode = inngest.createFunction(
     { id: "get-code", triggers: { event: "app/texcode" }, retries: 5 },
     async ({ event, step }) => {
+        await step.run("mark-generating", () => DataService.updateGenerationJob(event.data.jobId, "generating"));
         const resumeData = await step.run("get-resume-data", () =>
             DataService.getData(event.data.userId)
-        );
+        ).catch(async (error) => {
+            await DataService.updateGenerationJob(
+                event.data.jobId,
+                "failed",
+                error instanceof Error ? error.message : "Could not load resume data",
+            );
+            throw error;
+        });
 
         const response = await step.ai.infer("call-openai", {
             model: step.ai.models.openai({ model: "gpt-4o" }),
@@ -28,6 +36,13 @@ const getCode = inngest.createFunction(
                     },
                 ],
             },
+        }).catch(async (error) => {
+            await DataService.updateGenerationJob(
+                event.data.jobId,
+                "failed",
+                error instanceof Error ? error.message : "AI generation failed",
+            );
+            throw error;
         });
 
         const generatedTex = response.choices
@@ -43,6 +58,7 @@ const getCode = inngest.createFunction(
             await step.sendEvent("queue-tex-compilation", {
                 name: "resume/compile.requested",
                 data: {
+                    jobId: event.data.jobId,
                     resumeId: event.data.resumeId,
                     userId: event.data.userId,
                     texFile: generatedTex,
@@ -62,15 +78,26 @@ export const compileResumeTex = inngest.createFunction(
         retries: 1,
     },
     async ({ event, step }) => {
-        const pdfBase64 = await step.run("compile-latex", () =>
-            TexSandboxService.compile(event.data.texFile)
-        );
+        try {
+            await step.run("mark-compiling", () => DataService.updateGenerationJob(event.data.jobId, "compiling"));
+            const pdfBase64 = await step.run("compile-latex", () =>
+                TexSandboxService.compile(event.data.texFile)
+            );
 
-        await step.run("save-resume-pdf-file", () =>
-            DataService.savePdfFile(event.data.resumeId, event.data.userId, pdfBase64)
-        );
+            await step.run("save-resume-pdf-file", () =>
+                DataService.savePdfFile(event.data.resumeId, event.data.userId, pdfBase64)
+            );
+            await step.run("mark-completed", () => DataService.updateGenerationJob(event.data.jobId, "completed"));
 
-        return { resumeId: event.data.resumeId, status: "completed" };
+            return { resumeId: event.data.resumeId, status: "completed" };
+        } catch (error) {
+            await step.run("mark-failed", () => DataService.updateGenerationJob(
+                event.data.jobId,
+                "failed",
+                error instanceof Error ? error.message : "Compilation failed",
+            ));
+            throw error;
+        }
     }
 );
 
