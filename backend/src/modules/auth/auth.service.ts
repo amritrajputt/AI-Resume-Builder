@@ -3,26 +3,23 @@ import { users } from "../../db/schema"
 import { ApiError } from "../../common/errors/ApiError";
 import { eq } from "drizzle-orm";
 type RegisterDto = {
+    clerkId: string;
     name: string;
     email: string;
 };
 
 
 export class AuthService {
-    static async registerService({ name, email }: RegisterDto) {
-        const [existingUser] = await db
-            .select()
-            .from(users)
-            .where(eq(users.email, email));
-        
-        if (existingUser) {
-            throw ApiError.conflict("Email is already in use");
-        }
-        const [newUser] = await db
+    static async registerService({ clerkId, name, email }: RegisterDto) {
+        const [user] = await db
             .insert(users)
-            .values({ name, email })
+            .values({ clerkId, name, email })
+            .onConflictDoUpdate({
+                target: users.clerkId,
+                set: { name, email, updatedAt: new Date() },
+            })
             .returning();
-        return newUser;
+        return user;
     }
 }
 
