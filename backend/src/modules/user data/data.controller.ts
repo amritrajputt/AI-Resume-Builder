@@ -5,6 +5,21 @@ import { ApiError } from "../../common/errors/ApiError";
 import { DataService } from "./data.service";
 import { getAuth } from "@clerk/express";
 export class DataController {
+    static async getData(req: Request, res: Response, next: NextFunction) {
+        try {
+            const auth = getAuth(req);
+            if (!auth.isAuthenticated || !auth.userId) {
+                throw ApiError.unauthorized();
+            }
+
+            const data = await DataService.getData(auth.userId);
+            const response = ApiResponse.ok(data, "Data retrieved successfully");
+            return res.status(response.statusCode).json(response);
+        } catch (err) {
+            next(err);
+        }
+    }
+
     static async saveData(req: Request, res: Response, next: NextFunction) {
         try {
             const validatedData = resumeSchema.parse(req.body);

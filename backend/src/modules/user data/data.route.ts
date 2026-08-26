@@ -4,6 +4,7 @@ import { requireAuth } from "../../common/middleware.ts/auth.middleware";
 
 const dataRouter = Router();
 
+dataRouter.get("/invokeai", requireAuth, DataController.getData);
 dataRouter.post("/savedetails", requireAuth, DataController.saveData);
 dataRouter.patch("/updatedetails/:id", requireAuth, DataController.updateData);
 
