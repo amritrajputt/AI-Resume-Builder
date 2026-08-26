@@ -13,7 +13,7 @@
   "scripts": {
     "dev": "tsx dev.ts",
     "build": "tsc",
-    "start": "bunx tsx watch index.ts"
+    "start": "bunx tsx watch index.ts "
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -25,6 +25,7 @@
     "dotenv": "^17.4.2",
     "drizzle-orm": "^1.0.0-rc.4",
     "express": "^5.2.1",
+    "inngest": "^4.18.1",
     "pg": "^8.23.0",
     "zod": "^4.4.3"
   }

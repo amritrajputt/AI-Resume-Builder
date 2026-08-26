@@ -1,5 +1,5 @@
 import { db } from "../../index";
-import { resumes } from "../../db/schema";
+import { resumes, resumesTexFile } from "../../db/schema";
 import { and, eq, type InferInsertModel } from "drizzle-orm";
 
 type ResumeData = InferInsertModel<typeof resumes>;
@@ -33,5 +33,20 @@ export class DataService {
             .where(and(eq(resumes.id, id), eq(resumes.userId, userId)))
             .returning();
         return updatedResume;
+    }
+
+    static async saveTexFile(userId: string, texFile: string) {
+        const userResumes = await db
+            .select({ id: resumes.id })
+            .from(resumes)
+            .where(eq(resumes.userId, userId));
+
+        if (userResumes.length === 0) {
+            return [];
+        }
+
+        return db.insert(resumesTexFile).values(
+            userResumes.map(({ id: resumeId }) => ({ resumeId, texFile }))
+        ).returning();
     }
  }
