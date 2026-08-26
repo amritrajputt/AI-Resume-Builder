@@ -139,4 +139,6 @@ export const resumesPdfFile = pgTable("resumes_pdf_file", {
         }),
 
     pdfFile: text("pdf_file").notNull(),
-});
+}, (table) => ({
+    resumeIdUnique: uniqueIndex("resumes_pdf_file_resume_id_unique").on(table.resumeId),
+}));
