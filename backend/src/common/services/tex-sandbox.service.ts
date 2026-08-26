@@ -5,6 +5,7 @@ import path from "node:path";
 import { promisify } from "node:util";
 
 const execFileAsync = promisify(execFile);
+const COMPILE_TIMEOUT_MS = 15_000;
 
 export class TexSandboxService {
     static async compile(texFile: string): Promise<string> {
@@ -12,6 +13,7 @@ export class TexSandboxService {
         const containerName = `resume-tex-${path.basename(workdir)}`;
         const texPath = path.join(workdir, "resume.tex");
         const pdfPath = path.join(workdir, "resume.pdf");
+        const logPath = path.join(workdir, "resume.log");
 
         await fs.writeFile(texPath, texFile, "utf8");
 
@@ -37,9 +39,32 @@ export class TexSandboxService {
             ]);
 
             await execFileAsync("docker", ["cp", texPath, `${containerName}:/tmp/resume.tex`]);
-            await execFileAsync("docker", ["start", "--attach", containerName], { maxBuffer: 1024 * 1024 });
-            await execFileAsync("docker", ["cp", `${containerName}:/tmp/resume.pdf`, pdfPath]);
 
+            try {
+                await execFileAsync(
+                    "docker",
+                    ["start", "--attach", containerName],
+                    { maxBuffer: 1024 * 1024, signal: AbortSignal.timeout(COMPILE_TIMEOUT_MS) }
+                );
+            } catch (err: any) {
+                if (err.name === "AbortError") {
+                    // Force-kill hung container immediately
+                    await execFileAsync("docker", ["kill", containerName]).catch(() => undefined);
+                    throw new Error("LaTeX compilation timed out after 15s");
+                }
+                // pdflatex exited non-zero (compile error) — try to surface the actual reason
+                let logContent = "";
+                try {
+                    await execFileAsync("docker", ["cp", `${containerName}:/tmp/resume.log`, logPath]);
+                    logContent = await fs.readFile(logPath, "utf8");
+                } catch {
+                    // log copy can fail if container never even started properly
+                }
+                const errorLine = logContent.split("\n").find((l) => l.startsWith("!"));
+                throw new Error(errorLine || "LaTeX compilation failed");
+            }
+
+            await execFileAsync("docker", ["cp", `${containerName}:/tmp/resume.pdf`, pdfPath]);
             return (await fs.readFile(pdfPath)).toString("base64");
         } finally {
             await execFileAsync("docker", ["rm", "-f", containerName]).catch(() => undefined);
