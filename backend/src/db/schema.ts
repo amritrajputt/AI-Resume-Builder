@@ -1,4 +1,4 @@
-import { pgTable, text, jsonb, uuid, varchar, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, text, jsonb, uuid, varchar, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
 
 export const users = pgTable("users", {
     id: uuid("id").primaryKey().defaultRandom(),
@@ -125,7 +125,9 @@ export const resumesTexFile = pgTable("resumes_tex_file", {
         }),
 
     texFile: text("tex_file").notNull(),
-});
+}, (table) => ({
+    resumeIdUnique: uniqueIndex("resumes_tex_file_resume_id_unique").on(table.resumeId),
+}));
 
 export const resumesPdfFile = pgTable("resumes_pdf_file", {
     id: uuid("id").primaryKey().defaultRandom(),

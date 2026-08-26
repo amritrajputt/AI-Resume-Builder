@@ -1,4 +1,5 @@
 import { Inngest } from "inngest";
+import { TexSandboxService } from "../common/services/tex-sandbox.service";
 import { DataService } from "../modules/user data/data.service";
 import { resumeSystemPrompt } from "./system-prompt";
 
@@ -21,7 +22,7 @@ const getCode = inngest.createFunction(
                     {
                         role: "user",
                         content: [
-                            event.data.message ?? "create a tex code for this resume",
+                            event.data.message,
                             ...resumeData,
                         ].join("\n\n"),
                     },
@@ -38,7 +39,15 @@ const getCode = inngest.createFunction(
             DataService.saveTexFile(event.data.userId, generatedTex)
         );
 
-        return { generatedTex };
+        const pdfFile = await step.run("compile-resume-tex", () =>
+            TexSandboxService.compile(generatedTex)
+        );
+
+        await step.run("save-resume-pdf-file", () =>
+            DataService.savePdfFile(event.data.userId, pdfFile)
+        );
+
+        return { generatedTex, pdfFile };
     }
 );
 
