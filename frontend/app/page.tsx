@@ -1,21 +1,26 @@
 "use client";
 
-import { useAuth, useClerk, useUser } from "@clerk/nextjs";
+import { UserButton, useAuth, useClerk } from "@clerk/nextjs";
 
 export default function Home() {
   const { isLoaded, isSignedIn } = useAuth();
   const { openSignIn, openSignUp } = useClerk();
-  const { user } = useUser();
 
   return (
     <main className="site-shell">
       <nav className="topbar">
         <a className="brand" href="#top">resumio<span>.</span></a>
+        <div className="nav-links" aria-label="Primary navigation">
+          <a className="home-link" href="#top">Home</a>
+          <a href="#templates">Browse templates</a>
+          <a className="how-it-works-link" href="#features">How it works</a>
+        </div>
         <div className="nav-actions">
-          {isSignedIn && <span className="user-greeting">Hi, {user?.firstName || "there"}</span>}
+          {isSignedIn && <UserButton />}
           {isLoaded && !isSignedIn && (
             <button onClick={() => openSignIn()} className="text-button">Sign in</button>
           )}
+          
         </div>
       </nav>
 
