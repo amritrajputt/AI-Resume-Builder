@@ -1,10 +1,19 @@
 "use client";
 
 import { UserButton, useAuth, useClerk } from "@clerk/nextjs";
-
+import { useRouter } from "next/navigation";
 export default function Home() {
   const { isLoaded, isSignedIn } = useAuth();
   const { openSignIn, openSignUp } = useClerk();
+const router = useRouter();
+const handleGetStarted = () => {
+  if (!isLoaded) return;
+  if (!isSignedIn) {
+    openSignIn();
+  } else {
+    router.push("/details/personal-details");
+  }
+}
 
   return (
     <main className="site-shell">
@@ -30,9 +39,9 @@ export default function Home() {
           <p className="mb-2">From wording to formatting, our AI resume builder helps you create a polished resume that stands out in seconds.</p>
           <div className="hero-actions">
             {!isLoaded || isSignedIn ? (
-              <button className="button button-primary">Get started <span aria-hidden="true">↗</span></button>
+              <button className="button button-primary" onClick={handleGetStarted}>Get started <span aria-hidden="true">↗</span></button>
             ) : (
-              <button onClick={() => openSignUp()} className="button button-primary">Get started <span aria-hidden="true">↗</span></button>
+              <button className="button button-primary" onClick={handleGetStarted}>Get started <span aria-hidden="true">↗</span></button>
             )}
           </div>
           <div className="proof-row">
