@@ -26,7 +26,9 @@ export type Experience = {
     role: string;
     startDate: string;
     endDate?: string;
-    description: string[];
+    location?: string;
+    currentlyWorking?: boolean;
+    description: string | string[];
 };
 
 export type Project = {
