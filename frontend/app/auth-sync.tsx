@@ -3,7 +3,7 @@
 import { useAuth, useUser } from "@clerk/nextjs";
 import { useEffect, useRef } from "react";
 
-const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:3000";
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:5000";
 
 export function AuthSync() {
   const { getToken, isLoaded, isSignedIn } = useAuth();

@@ -4,7 +4,7 @@ import { useAuth, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
 
-const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:3000";
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:5000";
 
 type GenerationJob = {
   id: string;

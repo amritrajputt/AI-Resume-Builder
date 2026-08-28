@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 
-const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:3000";
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:5000";
 
 export default function AchievementsPage() {
   const { draft, updateDraft, saveResume } = useResumeDraft();
@@ -103,7 +103,7 @@ export default function AchievementsPage() {
 
   return (
     <div className="w-full max-w-xl my-20 mr-50">
-      <h2 className="text-2xl font-bold text-gray-900 mb-1">Achievements &amp; Honors</h2>
+      <h2 className="text-2xl font-bold text-gray-900 mb-1">Achievements & Honors</h2>
       <p className="text-sm text-gray-500 mb-6">
         Add notable achievements, hackathon wins, contest ranks, or awards (optional).
       </p>
@@ -164,7 +164,7 @@ export default function AchievementsPage() {
               <input
                 type="text"
                 required
-                placeholder="e.g. Solved 800+ DSA problems across LeetCode and GFG"
+                placeholder="e.g. Winner - Smart India Hackathon 2024"
                 value={item.title}
                 onChange={(e) =>
                   handleFieldChange(index, "title", e.target.value)
@@ -173,29 +173,29 @@ export default function AchievementsPage() {
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="sm:col-span-2">
-                <label className="block text-xs font-semibold text-gray-600 mb-1">
-                  Additional Details (Optional)
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Ranked in top 1.5% globally among 500k+ active coders"
-                  value={item.description || ""}
-                  onChange={(e) =>
-                    handleFieldChange(index, "description", e.target.value)
-                  }
-                  className="w-full rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
-                />
-              </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-600 mb-1">
+                Description / Impact
+              </label>
+              <textarea
+                rows={2}
+                placeholder="e.g. Built an AI triage model for rural healthcare out of 500+ participating teams."
+                value={item.description || ""}
+                onChange={(e) =>
+                  handleFieldChange(index, "description", e.target.value)
+                }
+                className="w-full rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 resize-y"
+              />
+            </div>
 
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-semibold text-gray-600 mb-1">
-                  Year / Date
+                  Date / Year
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. 2024"
+                  placeholder="e.g. Oct 2024"
                   value={item.date || ""}
                   onChange={(e) =>
                     handleFieldChange(index, "date", e.target.value)
@@ -231,7 +231,7 @@ export default function AchievementsPage() {
             disabled={isSaving}
             className="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white font-medium text-sm px-6 py-2.5 rounded-lg transition shadow-sm"
           >
-            {isSaving ? "Saving details..." : "Finish &amp; Generate Resume →"}
+            {isSaving ? "Saving details..." : "Finish & Generate Resume →"}
           </button>
         </div>
       </form>

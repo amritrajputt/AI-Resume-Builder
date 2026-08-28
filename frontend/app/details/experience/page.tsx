@@ -260,7 +260,7 @@ export default function ExperiencePage() {
               type="submit"
               className="bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm px-5 py-2.5 rounded-lg transition"
             >
-              Save &amp; Continue →
+              Save & Continue →
             </button>
           </div>
         </div>

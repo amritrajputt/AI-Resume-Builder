@@ -82,7 +82,7 @@ const emptyDraft: ResumeDraft = {
 };
 
 const storageKey = "resumio-resume-draft";
-const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:3000";
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:5000";
 
 const ResumeDraftContext = createContext<{
   draft: ResumeDraft;
