@@ -57,13 +57,23 @@ export class DataService {
             return undefined;
         }
 
-        const [savedTexFile] = await db.insert(resumesTexFile)
+        const [existing] = await db
+            .select({ id: resumesTexFile.id })
+            .from(resumesTexFile)
+            .where(eq(resumesTexFile.resumeId, resumeId));
+
+        if (existing) {
+            const [updatedTexFile] = await db
+                .update(resumesTexFile)
+                .set({ texFile })
+                .where(eq(resumesTexFile.resumeId, resumeId))
+                .returning();
+            return updatedTexFile;
+        }
+
+        const [savedTexFile] = await db
+            .insert(resumesTexFile)
             .values({ resumeId, texFile })
-            .onConflictDoUpdate({
-                target: resumesTexFile.resumeId,
-                set: { texFile },
-                where: sql`${resumesTexFile.texFile} is distinct from ${texFile}`,
-            })
             .returning();
 
         return savedTexFile;
@@ -80,12 +90,23 @@ export class DataService {
             return undefined;
         }
 
-        const [savedPdfFile] = await db.insert(resumesPdfFile)
+        const [existing] = await db
+            .select({ id: resumesPdfFile.id })
+            .from(resumesPdfFile)
+            .where(eq(resumesPdfFile.resumeId, resumeId));
+
+        if (existing) {
+            const [updatedPdfFile] = await db
+                .update(resumesPdfFile)
+                .set({ pdfFile })
+                .where(eq(resumesPdfFile.resumeId, resumeId))
+                .returning();
+            return updatedPdfFile;
+        }
+
+        const [savedPdfFile] = await db
+            .insert(resumesPdfFile)
             .values({ resumeId, pdfFile })
-            .onConflictDoUpdate({
-                target: resumesPdfFile.resumeId,
-                set: { pdfFile },
-            })
             .returning();
 
         return savedPdfFile;

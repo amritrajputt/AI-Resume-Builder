@@ -13,6 +13,7 @@ const steps = [
   { label: "Skills", href: "/details/skills", icon: "⚡" },
   { label: "Coding Profiles", href: "/details/coding-profiles", icon: "💻" },
   { label: "Achievements", href: "/details/achievements", icon: "🏆" },
+  { label: "Review & Generate", href: "/details/review", icon: "✨" },
 ];
 
 export default function DetailsLayout({

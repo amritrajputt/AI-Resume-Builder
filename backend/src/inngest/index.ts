@@ -4,6 +4,19 @@ import { resumeSystemPrompt } from "./system-prompt";
 import { inngest } from "./client";
 
 export { inngest };
+function sanitizeTex(rawTex: string): string {
+    let tex = rawTex
+        .replace(/^```(?:latex|tex)?\s*/i, "")
+        .replace(/\s*```$/i, "")
+        .trim();
+
+    // Fix \titleformat with empty separation {}{}{} -> {}{0pt}{}
+    tex = tex.replace(/\\titleformat\{\\section\}\s*\{([^}]*)\}\s*\{\s*\}\s*\{\s*\}\s*\{\s*\}/g, "\\titleformat{\\section}{$1}{}{0pt}{}");
+    tex = tex.replace(/\\titleformat\{\\section\}\s*\[([^\]]*)\]\s*\{([^}]*)\}\s*\{\s*\}\s*\{\s*\}/g, "\\titleformat{\\section}[$1]{$2}{}{0pt}{}");
+
+    return tex;
+}
+
 const getCode = inngest.createFunction(
     { id: "get-code", triggers: { event: "app/texcode" }, retries: 5 },
     async ({ event, step }) => {
@@ -20,7 +33,10 @@ const getCode = inngest.createFunction(
         });
 
         const response = await step.ai.infer("call-openai", {
-            model: step.ai.models.openai({ model: "gpt-4o" }),
+            model: step.ai.models.openai({
+                model: "gpt-4o",
+                apiKey: process.env.OPENAI_API_KEY || process.env.OPEN_API_KEY,
+            }),
             body: {
                 messages: [
                     {
@@ -45,10 +61,12 @@ const getCode = inngest.createFunction(
             throw error;
         });
 
-        const generatedTex = response.choices
+        const rawGeneratedTex = response.choices
             .map((choice) => choice.message?.content ?? "")
             .filter(Boolean)
             .join("\n");
+
+        const generatedTex = sanitizeTex(rawGeneratedTex);
 
         const savedTexFile = await step.run("save-resume-tex-file", () =>
             DataService.saveTexFile(event.data.resumeId, event.data.userId, generatedTex)
@@ -81,7 +99,7 @@ export const compileResumeTex = inngest.createFunction(
         try {
             await step.run("mark-compiling", () => DataService.updateGenerationJob(event.data.jobId, "compiling"));
             const pdfBase64 = await step.run("compile-latex", () =>
-                TexSandboxService.compile(event.data.texFile)
+                TexSandboxService.compile(sanitizeTex(event.data.texFile))
             );
 
             await step.run("save-resume-pdf-file", () =>

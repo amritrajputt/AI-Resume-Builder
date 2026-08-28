@@ -35,8 +35,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={`${playfair.variable} ${blackOpsOne.variable}`}><AuthSync />{children}</body>
+        <body className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${blackOpsOne.variable} antialiased font-sans`}>
+          <AuthSync />
+          {children}
+        </body>
       </html>
     </ClerkProvider>
-  )
+  );
 }

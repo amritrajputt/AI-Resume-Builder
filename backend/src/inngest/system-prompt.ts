@@ -31,8 +31,10 @@ export const resumeSystemPrompt = `You are a LaTeX resume generation engine. You
 }
 
 \\titleformat{\\section}
-  {\\bfseries\\large}
-  {}{}{}
+  {\\large\\bfseries}
+  {}
+  {0pt}
+  {}
   [\\vspace{-6pt}\\rule{\\linewidth}{0.4pt}\\vspace{-4pt}]
 
 \\titlespacing{\\section}{0pt}{6pt}{4pt}

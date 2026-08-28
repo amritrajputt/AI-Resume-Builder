@@ -5,12 +5,12 @@ import path from "node:path";
 import { promisify } from "node:util";
 
 const execFileAsync = promisify(execFile);
-const COMPILE_TIMEOUT_MS = 15_000;
+const COMPILE_TIMEOUT_MS = 25_000;
 
 export class TexSandboxService {
     static async compile(texFile: string): Promise<string> {
         const workdir = await fs.mkdtemp(path.join(os.tmpdir(), "resume-tex-"));
-        const containerName = `resume-tex-${path.basename(workdir)}`;
+        const normalizedWorkdir = workdir.replace(/\\/g, "/");
         const texPath = path.join(workdir, "resume.tex");
         const pdfPath = path.join(workdir, "resume.pdf");
         const logPath = path.join(workdir, "resume.log");
@@ -19,14 +19,14 @@ export class TexSandboxService {
 
         try {
             await execFileAsync("docker", [
-                "create",
-                "--name", containerName,
+                "run",
+                "--rm",
                 "--network", "none",
                 "--memory", "512m",
                 "--cpus", "1",
                 "--pids-limit", "128",
-                "--read-only",
-                "--tmpfs", "/tmp:rw,noexec,nosuid,size=64m",
+                "-v", `${normalizedWorkdir}:/workspace:rw`,
+                "-w", "/workspace",
                 "--cap-drop", "ALL",
                 "--security-opt", "no-new-privileges",
                 "texlive/texlive:latest",
@@ -34,41 +34,28 @@ export class TexSandboxService {
                 "-interaction=nonstopmode",
                 "-halt-on-error",
                 "-no-shell-escape",
-                "-output-directory=/tmp",
-                "/tmp/resume.tex",
-            ]);
+                "resume.tex",
+            ], {
+                maxBuffer: 1024 * 1024,
+                signal: AbortSignal.timeout(COMPILE_TIMEOUT_MS),
+            });
 
-            await execFileAsync("docker", ["cp", texPath, `${containerName}:/tmp/resume.tex`]);
-
-            try {
-                await execFileAsync(
-                    "docker",
-                    ["start", "--attach", containerName],
-                    { maxBuffer: 1024 * 1024, signal: AbortSignal.timeout(COMPILE_TIMEOUT_MS) }
-                );
-            } catch (err: any) {
-                if (err.name === "AbortError") {
-                    // Force-kill hung container immediately
-                    await execFileAsync("docker", ["kill", containerName]).catch(() => undefined);
-                    throw new Error("LaTeX compilation timed out after 15s");
-                }
-                // pdflatex exited non-zero (compile error) — try to surface the actual reason
-                let logContent = "";
-                try {
-                    await execFileAsync("docker", ["cp", `${containerName}:/tmp/resume.log`, logPath]);
-                    logContent = await fs.readFile(logPath, "utf8");
-                } catch {
-                    // log copy can fail if container never even started properly
-                }
-                const errorLine = logContent.split("\n").find((l) => l.startsWith("!"));
-                throw new Error(errorLine || "LaTeX compilation failed");
+            const pdfBuffer = await fs.readFile(pdfPath);
+            return pdfBuffer.toString("base64");
+        } catch (err: any) {
+            if (err.name === "AbortError") {
+                throw new Error("LaTeX compilation timed out after 25s");
             }
-
-            await execFileAsync("docker", ["cp", `${containerName}:/tmp/resume.pdf`, pdfPath]);
-            return (await fs.readFile(pdfPath)).toString("base64");
+            let logContent = "";
+            try {
+                logContent = await fs.readFile(logPath, "utf8");
+            } catch {
+                // log may not exist if docker failed before running pdflatex
+            }
+            const errorLine = logContent.split("\n").find((l) => l.startsWith("!"));
+            throw new Error(errorLine || err.message || "LaTeX compilation failed");
         } finally {
-            await execFileAsync("docker", ["rm", "-f", containerName]).catch(() => undefined);
-            await fs.rm(workdir, { recursive: true, force: true });
+            await fs.rm(workdir, { recursive: true, force: true }).catch(() => undefined);
         }
     }
 }

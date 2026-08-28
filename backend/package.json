@@ -13,7 +13,8 @@
   "scripts": {
     "dev": "tsx dev.ts",
     "build": "tsc",
-    "start": "bunx tsx watch index.ts "
+    "start": "bunx tsx watch index.ts ",
+    "inngest": "npx inngest-cli@latest dev -u http://localhost:5000/api/inngest"
   },
   "peerDependencies": {
     "typescript": "^5"

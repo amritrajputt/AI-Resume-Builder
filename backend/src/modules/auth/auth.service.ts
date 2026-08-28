@@ -11,15 +11,25 @@ type RegisterDto = {
 
 export class AuthService {
     static async registerService({ clerkId, name, email }: RegisterDto) {
-        const [user] = await db
+        const [existing] = await db
+            .select({ id: users.id })
+            .from(users)
+            .where(eq(users.clerkId, clerkId));
+
+        if (existing) {
+            const [updatedUser] = await db
+                .update(users)
+                .set({ name, email, updatedAt: new Date() })
+                .where(eq(users.clerkId, clerkId))
+                .returning();
+            return updatedUser;
+        }
+
+        const [newUser] = await db
             .insert(users)
             .values({ clerkId, name, email })
-            .onConflictDoUpdate({
-                target: users.clerkId,
-                set: { name, email, updatedAt: new Date() },
-            })
             .returning();
-        return user;
+        return newUser;
     }
 }
 

@@ -43,62 +43,9 @@ export default function AchievementsPage() {
     updateDraft({ achievements: updated });
   };
 
-  const handleFinish = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSaving(true);
-    setErrorMsg(null);
-
-    try {
-      const res = await saveResume();
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.message || "Failed to save resume details");
-      }
-
-      const json = await res.json();
-      const savedResume = json.data;
-      if (savedResume?.id) {
-        window.sessionStorage.setItem("resumio-saved-resume-id", savedResume.id);
-
-        const token = await getToken();
-        if (token) {
-          try {
-            const genRes = await fetch(`${backendUrl}/data/generate`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-              body: JSON.stringify({
-                resumeId: savedResume.id,
-                message: "Generate a polished software engineer resume",
-              }),
-            });
-            if (genRes.ok) {
-              const genJson = await genRes.json();
-              if (genJson.data?.jobId) {
-                window.sessionStorage.setItem(
-                  "resumio-saved-job-id",
-                  genJson.data.jobId
-                );
-              }
-            }
-          } catch (genErr) {
-            console.error("Auto-generate trigger error:", genErr);
-          }
-        }
-      }
-
-      router.push("/dashboard");
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setErrorMsg(err.message);
-      } else {
-        setErrorMsg("An unexpected error occurred while saving.");
-      }
-    } finally {
-      setIsSaving(false);
-    }
+    router.push("/details/review");
   };
 
   return (
@@ -108,7 +55,7 @@ export default function AchievementsPage() {
         Add notable achievements, hackathon wins, contest ranks, or awards (optional).
       </p>
 
-      <form onSubmit={handleFinish} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6">
         {errorMsg && (
           <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm">
             {errorMsg}
@@ -228,10 +175,9 @@ export default function AchievementsPage() {
 
           <button
             type="submit"
-            disabled={isSaving}
-            className="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white font-medium text-sm px-6 py-2.5 rounded-lg transition shadow-sm"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm px-6 py-2.5 rounded-lg transition shadow-sm"
           >
-            {isSaving ? "Saving details..." : "Finish & Generate Resume →"}
+            Review & Generate Resume →
           </button>
         </div>
       </form>
