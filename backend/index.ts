@@ -4,13 +4,13 @@ import cors from 'cors';
 import { clerkMiddleware } from '@clerk/express';
 import { serve } from 'inngest/express';
 import { authRouter } from './src/modules/auth/auth.route';
-import { dataRouter } from './src/modules/user data/data.route';
+import { dataRouter } from './src/modules/user-data/data.route';
 import { functions, inngest } from './src/inngest';
-import { errorHandler } from './src/common/middleware.ts/error.middleware';
+import { errorHandler } from './src/common/middleware/error.middleware';
 
 const app = express();
 app.use(express.json());
-app.use(cors({ 
+app.use(cors({
   origin: [process.env.FRONTEND_URL ?? 'http://localhost:3000', 'http://localhost:3000', 'http://localhost:3001'],
   credentials: true,
 }));

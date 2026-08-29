@@ -1,5 +1,5 @@
 import { TexSandboxService } from "../common/services/tex-sandbox.service";
-import { DataService } from "../modules/user data/data.service";
+import { DataService } from "../modules/user-data/data.service";
 import { resumeSystemPrompt } from "./system-prompt";
 import { inngest } from "./client";
 

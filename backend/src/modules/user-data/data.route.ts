@@ -1,6 +1,6 @@
 import Router from "express";
 import { DataController } from "./data.controller";
-import { requireAuth } from "../../common/middleware.ts/auth.middleware";
+import { requireAuth } from "../../common/middleware/auth.middleware";
 
 const dataRouter = Router();
 
