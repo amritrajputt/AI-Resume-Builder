@@ -36,8 +36,8 @@ export class DataService {
         return newResume;
 
     }
-    static async updateData(id: string, userId: string, data: Partial<ResumeData>) {
-        userId = await this.getInternalUserId(userId);
+    static async updateData(id: string, clerkId: string, data: Partial<ResumeData>) {
+        const userId = await this.getInternalUserId(clerkId);
         const [updatedResume] = await db
             .update(resumes)
             .set(data)
@@ -46,8 +46,8 @@ export class DataService {
         return updatedResume;
     }
 
-    static async saveTexFile(resumeId: string, userId: string, texFile: string) {
-        userId = await this.getInternalUserId(userId);
+    static async saveTexFile(resumeId: string, clerkId: string, texFile: string) {
+        const userId = await this.getInternalUserId(clerkId);
         const [ownedResume] = await db
             .select({ id: resumes.id })
             .from(resumes)
@@ -79,8 +79,8 @@ export class DataService {
         return savedTexFile;
     }
 
-    static async savePdfFile(resumeId: string, userId: string, pdfFile: string) {
-        userId = await this.getInternalUserId(userId);
+    static async savePdfFile(resumeId: string, clerkId: string, pdfFile: string) {
+        const userId = await this.getInternalUserId(clerkId);
         const [ownedResume] = await db
             .select({ id: resumes.id })
             .from(resumes)
