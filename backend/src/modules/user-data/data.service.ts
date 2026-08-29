@@ -7,6 +7,7 @@ type ResumeData = InferInsertModel<typeof resumes>;
 
 export class DataService {
     static async getInternalUserId(clerkId: string) {
+        if (!clerkId) throw ApiError.unauthorized("User authentication ID is missing");
         const [user] = await db.select({ id: users.id }).from(users).where(eq(users.clerkId, clerkId));
         if (!user) throw ApiError.notFound("User profile not found");
         return user.id;
@@ -28,6 +29,10 @@ export class DataService {
             .select()
             .from(resumes)
             .where(eq(resumes.userId, userId));
+
+        if (resumeList.length === 0) {
+            throw ApiError.notFound("No resume data found for this user. Please complete your profile details first.");
+        }
 
         return resumeList.map((resume) =>
             Object.entries(resume)
