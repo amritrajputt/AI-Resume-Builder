@@ -10,7 +10,6 @@ function sanitizeTex(rawTex: string): string {
         .replace(/\s*```$/i, "")
         .trim();
 
-    // Fix \titleformat with empty separation {}{}{} -> {}{0pt}{}
     tex = tex.replace(/\\titleformat\{\\section\}\s*\{([^}]*)\}\s*\{\s*\}\s*\{\s*\}\s*\{\s*\}/g, "\\titleformat{\\section}{$1}{}{0pt}{}");
     tex = tex.replace(/\\titleformat\{\\section\}\s*\[([^\]]*)\]\s*\{([^}]*)\}\s*\{\s*\}\s*\{\s*\}/g, "\\titleformat{\\section}[$1]{$2}{}{0pt}{}");
 

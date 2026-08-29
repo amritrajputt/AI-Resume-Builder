@@ -145,7 +145,7 @@ export default function DashboardPage() {
               onClick={() => triggerGeneration()}
               className="bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs px-4 py-2.5 rounded-lg transition shadow-xs"
             >
-              ✨ Regenerate Resume
+               Regenerate Resume
             </button>
             {pdfUrl && (
               <a

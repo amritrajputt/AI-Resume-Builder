@@ -30,12 +30,20 @@ export default function DetailsLayout({
         <div className="grid min-h-screen lg:grid-cols-[260px_1fr]">
           {/* Sidebar */}
           <aside className="border-r border-gray-200 bg-white flex flex-col px-5 py-7 max-lg:flex-row max-lg:items-center max-lg:gap-4 max-lg:border-b max-lg:border-r-0 max-lg:py-4 max-lg:overflow-x-auto">
-            <Link
-              href="/"
-              className="brand text-lg font-bold tracking-tight no-underline shrink-0"
-            >
-              resumio<span>.</span>
-            </Link>
+            <div className="flex items-center justify-between gap-3 w-full shrink-0">
+              <Link
+                href="/"
+                className="brand text-lg font-bold tracking-tight no-underline shrink-0"
+              >
+                resumio<span>.</span>
+              </Link>
+              <Link
+                href="/"
+                className="inline-flex items-center gap-1 text-xs font-medium text-slate-600 hover:text-blue-600 transition-colors bg-slate-100 hover:bg-blue-50 px-2.5 py-1 rounded-full"
+              >
+                ← Home
+              </Link>
+            </div>
 
             <p className="text-[11px] text-gray-400 uppercase tracking-widest mt-6 mb-5 max-lg:hidden">
               Build your resume
@@ -100,7 +108,15 @@ export default function DetailsLayout({
           </aside>
 
           {/* Main */}
-          <main className="bg-gray-50/50 flex justify-center p-8 max-sm:p-5 overflow-y-auto">
+          <main className="bg-gray-50/50 flex flex-col items-center p-8 max-sm:p-5 overflow-y-auto">
+            <div className="w-full max-w-4xl mb-4 flex items-center justify-start">
+              <Link
+                href="/"
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-blue-600 transition-colors bg-white border border-slate-200 shadow-sm hover:bg-slate-50 px-3 py-1.5 rounded-full"
+              >
+                ← Back to Home
+              </Link>
+            </div>
             {children}
           </main>
         </div>

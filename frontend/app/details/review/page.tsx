@@ -213,9 +213,7 @@ export default function ReviewPage() {
       <div className="rounded-2xl border-2 border-blue-200 bg-gradient-to-br from-blue-50/70 via-indigo-50/40 to-purple-50/50 p-6 shadow-sm space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-600 text-white text-base shadow-xs">
-              ✨
-            </span>
+            
             <div>
               <h3 className="text-base font-bold text-gray-900">AI LaTeX Resume Engine</h3>
               <p className="text-xs text-gray-500">
@@ -283,11 +281,11 @@ export default function ReviewPage() {
               </>
             ) : pdfUrl ? (
               <>
-                <span>✨</span> Re-generate Resume
+                <span></span> Re-generate Resume
               </>
             ) : (
               <>
-                <span>✨</span> Generate Resume Now
+                <span></span> Generate Resume Now
               </>
             )}
           </button>
@@ -656,7 +654,7 @@ export default function ReviewPage() {
               disabled={isGenerating}
               className="bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white font-semibold text-sm px-6 py-2.5 rounded-xl transition shadow-md flex items-center gap-2 cursor-pointer"
             >
-              <span>✨</span> Generate Resume with AI
+              <span></span> Generate Resume with AI
             </button>
           </div>
         </div>

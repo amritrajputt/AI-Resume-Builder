@@ -20,7 +20,7 @@ app.use('/auth', authRouter);
 app.use('/data', dataRouter);
 app.use('/api/inngest', serve({ client: inngest, functions }));
 
-// Global Error Handler
+
 app.use(errorHandler);
 
 const PORT = Number(process.env.PORT ?? 5000);
