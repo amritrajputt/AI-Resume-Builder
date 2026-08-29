@@ -18,38 +18,60 @@ export class DataService {
         const resumeList = await db
             .select()
             .from(resumes)
-            .where(eq(resumes.userId, userId));
+            .where(eq(resumes.userId, userId))
+            .orderBy(sql`${resumes.updatedAt} DESC`);
 
         return resumeList;
     }
 
-    static async getFormattedResumeForAI(clerkId: string) {
+    static async getFormattedResumeForAI(clerkId: string, resumeId?: string) {
         const userId = await this.getInternalUserId(clerkId);
         const resumeList = await db
             .select()
             .from(resumes)
-            .where(eq(resumes.userId, userId));
+            .where(
+                resumeId
+                    ? and(eq(resumes.id, resumeId), eq(resumes.userId, userId))
+                    : eq(resumes.userId, userId)
+            )
+            .orderBy(sql`${resumes.updatedAt} DESC`);
 
-        if (resumeList.length === 0) {
+        if (resumeList.length === 0 || !resumeList[0]) {
             throw ApiError.notFound("No resume data found for this user. Please complete your profile details first.");
         }
 
-        return resumeList.map((resume) =>
-            Object.entries(resume)
+        const targetResume = resumeList[0];
+
+        return [
+            Object.entries(targetResume)
                 .map(([key, value]) => `${key}: ${JSON.stringify(value)}`)
                 .join("\n")
-        );
+        ];
     }
 
     static async saveData(data: Omit<ResumeData, "userId">, clerkId: string) {
         const userId = await this.getInternalUserId(clerkId);
+        const [existing] = await db
+            .select({ id: resumes.id })
+            .from(resumes)
+            .where(eq(resumes.userId, userId))
+            .orderBy(sql`${resumes.updatedAt} DESC`);
+
+        if (existing) {
+            const [updatedResume] = await db
+                .update(resumes)
+                .set({ ...data, updatedAt: new Date() })
+                .where(eq(resumes.id, existing.id))
+                .returning();
+            return updatedResume;
+        }
+
         const [newResume] = await db
             .insert(resumes)
             .values({ ...data, userId })
             .returning();
         if (!newResume) throw ApiError.internalServerError("Resume could not be saved");
         return newResume;
-
     }
     static async updateData(id: string, clerkId: string, data: Partial<ResumeData>) {
         const userId = await this.getInternalUserId(clerkId);
