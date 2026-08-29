@@ -1,34 +1,29 @@
 import type { Request, Response, NextFunction } from "express";
 import { AuthService } from "./auth.service";
 import { ApiResponse } from "../../common/responses/ApiResponses";
+import { ApiError } from "../../common/errors/ApiError";
 import { getAuth } from "@clerk/express";
+import { z } from "zod";
 
-type AuthUserData = {
-    email_addresses?: Array<{ email_address?: string }>;
-    first_name?: string;
-    last_name?: string;
-    email?: string;
-};
-
-type AuthWebhookBody = {
-    name?: string;
-    email?: string;
-};
+const registerSchema = z.object({
+    name: z.string().optional(),
+    email: z.string().email("Valid email is required"),
+});
 
 export class AuthController {
     static async register(req: Request, res: Response, next: NextFunction) {
         try {
-            const payload = (req.body ?? {}) as AuthWebhookBody;
             const auth = getAuth(req);
             const clerkId = auth.userId;
-            const email = payload.email;
-            const name = payload.name?.trim() || "Unnamed user";
 
-            if (!email || !clerkId) {
-                return res.status(400).json({ success: false, message: "Name and email are required" });
+            if (!clerkId) {
+                throw ApiError.unauthorized("Authentication token or user ID missing");
             }
 
-            const newUser = await AuthService.registerService({ clerkId, name, email });
+            const { name, email } = registerSchema.parse(req.body);
+            const userName = name?.trim() || "Unnamed user";
+
+            const newUser = await AuthService.registerService({ clerkId, name: userName, email });
             const response = ApiResponse.created(newUser, "User registered successfully");
             return res.status(response.statusCode).json(response);
         } catch (err) {

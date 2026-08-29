@@ -4,9 +4,14 @@ import { requireAuth } from "../../common/middleware/auth.middleware";
 
 const dataRouter = Router();
 
+dataRouter.get("/resumes", requireAuth, DataController.getData);
+dataRouter.post("/resumes", requireAuth, DataController.saveData);
+dataRouter.patch("/resumes/:id", requireAuth, DataController.updateData);
+
 dataRouter.get("/invokeai", requireAuth, DataController.getData);
 dataRouter.post("/savedetails", requireAuth, DataController.saveData);
 dataRouter.patch("/updatedetails/:id", requireAuth, DataController.updateData);
+
 dataRouter.post("/generate", requireAuth, DataController.generate);
 dataRouter.get("/generation/:id", requireAuth, DataController.getGenerationStatus);
 dataRouter.get("/:id/pdf", requireAuth, DataController.getPdf);
