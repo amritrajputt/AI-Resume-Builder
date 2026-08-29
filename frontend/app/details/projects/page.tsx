@@ -65,12 +65,37 @@ export default function ProjectsPage() {
     );
   };
 
+  const experienceCount = Array.isArray(draft.experience) ? draft.experience.length : 0;
+  const projectCount = projectsList.length;
+  const isFresher = experienceCount === 0;
+
   return (
     <div className="w-full max-w-xl my-20 mr-50">
       <h2 className="text-2xl font-bold text-gray-900 mb-1">Projects</h2>
-      <p className="text-sm text-gray-500 mb-6">
+      <p className="text-sm text-gray-500 mb-4">
         Highlight your best personal, open-source, or academic projects.
       </p>
+
+      {/* Smart Page Density Suggestion */}
+      <div className="mb-6 rounded-2xl border border-blue-200 bg-gradient-to-r from-blue-50/90 via-indigo-50/60 to-blue-50/90 p-4 shadow-xs flex items-start gap-3">
+        <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-blue-600 text-white font-bold text-xs shrink-0 mt-0.5">
+          💡
+        </div>
+        <div className="text-xs leading-relaxed text-slate-700">
+          <p className="font-semibold text-slate-900 mb-0.5">
+            Smart 1-Page Layout Tip
+          </p>
+          {isFresher ? (
+            <span>
+              Since you have <strong className="text-blue-700 font-semibold">0 work experience</strong>, we recommend adding at least <strong className="text-blue-700 font-semibold">3 detailed projects</strong> to fill your 1-page resume perfectly. (Currently: <span className={projectCount >= 3 ? "text-emerald-700 font-bold" : "text-amber-600 font-bold"}>{projectCount}/3 added</span>)
+            </span>
+          ) : (
+            <span>
+              For profiles with work experience, adding <strong className="text-blue-700 font-semibold">2 strong projects</strong> is recommended to fill 1 page cleanly. (Currently: <span className={projectCount >= 2 ? "text-emerald-700 font-bold" : "text-amber-600 font-bold"}>{projectCount}/2 added</span>)
+            </span>
+          )}
+        </div>
+      </div>
 
       <form
         onSubmit={(e) => {

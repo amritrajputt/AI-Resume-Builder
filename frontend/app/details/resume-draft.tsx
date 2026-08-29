@@ -159,6 +159,18 @@ export function ResumeDraftProvider({ children }: { children: React.ReactNode })
       education: draft.education.filter(
         (e) => e.degree.trim() || e.institution.trim()
       ),
+      projects: draft.projects.filter(
+        (p) => p.title.trim() || p.description.trim() || (p.technologies && p.technologies.length > 0)
+      ),
+      experience: draft.experience.filter(
+        (exp) => exp.company.trim() || exp.role.trim() || exp.description.trim()
+      ),
+      codingProfiles: draft.codingProfiles.filter(
+        (cp) => cp.platform.trim() || cp.url.trim()
+      ),
+      achievements: draft.achievements.filter(
+        (ach) => ach.title.trim()
+      ),
     };
 
     return fetch(`${backendUrl}/data/savedetails`, {

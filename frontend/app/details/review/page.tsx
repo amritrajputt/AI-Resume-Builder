@@ -209,6 +209,39 @@ export default function ReviewPage() {
         </div>
       )}
 
+      {/* Smart Density Suggestion Banner */}
+      {(() => {
+        const expCount = Array.isArray(draft.experience) ? draft.experience.length : 0;
+        const projCount = Array.isArray(draft.projects) ? draft.projects.length : 0;
+        const isFresher = expCount === 0;
+        const isOptimal = isFresher ? projCount >= 3 : projCount >= 2;
+
+        return (
+          <div className={`p-3.5 rounded-xl border text-xs flex items-center justify-between ${
+            isOptimal
+              ? "bg-emerald-50/80 border-emerald-200 text-emerald-800"
+              : "bg-amber-50/90 border-amber-200 text-amber-800"
+          }`}>
+            <div className="flex items-center gap-2.5">
+              <span className="text-base">{isOptimal ? "✨" : "💡"}</span>
+              <span>
+                {isFresher
+                  ? `Fresher Profile: ${projCount}/3 projects added. ${projCount < 3 ? "Adding 3 projects is recommended to fill 1 full page." : "Great job! 3+ projects will fill 1 full page."}`
+                  : `Experienced Profile: ${expCount} experience & ${projCount}/2 projects added. Ideal for a clean 1-page layout.`}
+              </span>
+            </div>
+            {!isOptimal && (
+              <Link
+                href="/details/projects"
+                className="font-semibold text-amber-900 underline hover:text-amber-700 whitespace-nowrap ml-2"
+              >
+                + Add Projects
+              </Link>
+            )}
+          </div>
+        );
+      })()}
+
       {/* Generation Callout Card */}
       <div className="rounded-2xl border-2 border-blue-200 bg-gradient-to-br from-blue-50/70 via-indigo-50/40 to-purple-50/50 p-6 shadow-sm space-y-4">
         <div className="flex items-center justify-between">

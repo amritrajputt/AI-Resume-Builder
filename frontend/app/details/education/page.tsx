@@ -48,9 +48,24 @@ export default function Education() {
   return (
     <div className="w-full max-w-xl my-20 mr-50">
       <h2 className="text-2xl font-bold text-gray-900 mb-1">Education Details</h2>
-      <p className="text-sm text-gray-500 mb-6">
+      <p className="text-sm text-gray-500 mb-4">
         Add your academic qualifications (max 2 entries: e.g. B.Tech, M.Tech, 12th).
       </p>
+
+      {/* Smart Education Recommendation */}
+      <div className="mb-6 rounded-2xl border border-blue-200 bg-gradient-to-r from-blue-50/90 via-indigo-50/60 to-blue-50/90 p-4 shadow-xs flex items-start gap-3">
+        <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-blue-600 text-white font-bold text-xs shrink-0 mt-0.5">
+          💡
+        </div>
+        <div className="text-xs leading-relaxed text-slate-700">
+          <p className="font-semibold text-slate-900 mb-0.5">
+            Smart Education Recommendation
+          </p>
+          <span>
+            For a clean 1-page ATS resume, mention your <strong className="text-blue-700 font-semibold">current degree (e.g. B.Tech/M.Tech)</strong> or a <strong className="text-blue-700 font-semibold">maximum of 2 education entries</strong> (e.g. College &amp; 12th). Avoid listing 10th grade or middle school. (Currently: <span className={educationList.length <= 2 ? "text-emerald-700 font-bold" : "text-amber-600 font-bold"}>{educationList.length}/2 entries</span>)
+          </span>
+        </div>
+      </div>
 
       <form
         onSubmit={(e) => {
