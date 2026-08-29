@@ -1,4 +1,4 @@
-import { db } from "../../index"
+import { db } from "../../db/client";
 import { users } from "../../db/schema"
 import { ApiError } from "../../common/errors/ApiError";
 import { eq } from "drizzle-orm";
