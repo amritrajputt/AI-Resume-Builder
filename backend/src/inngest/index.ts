@@ -21,7 +21,7 @@ const getCode = inngest.createFunction(
     async ({ event, step }) => {
         await step.run("mark-generating", () => DataService.updateGenerationJob(event.data.jobId, "generating"));
         const resumeData = await step.run("get-resume-data", () =>
-            DataService.getData(event.data.userId)
+            DataService.getFormattedResumeForAI(event.data.userId)
         ).catch(async (error) => {
             await DataService.updateGenerationJob(
                 event.data.jobId,
@@ -34,7 +34,7 @@ const getCode = inngest.createFunction(
         const response = await step.ai.infer("call-openai", {
             model: step.ai.models.openai({
                 model: "gpt-4o",
-                apiKey: process.env.OPENAI_API_KEY || process.env.OPEN_API_KEY,
+                apiKey: process.env.OPENAI_API_KEY,
             }),
             body: {
                 messages: [
