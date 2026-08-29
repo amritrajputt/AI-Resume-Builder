@@ -1,4 +1,4 @@
-import { db } from "../../index";
+import { db } from "../../db/client";
 import { generationJobs, resumes, resumesPdfFile, resumesTexFile, users } from "../../db/schema";
 import { and, eq, sql, type InferInsertModel } from "drizzle-orm";
 import { ApiError } from "../../common/errors/ApiError";
@@ -14,12 +14,22 @@ export class DataService {
 
     static async getData(clerkId: string) {
         const userId = await this.getInternalUserId(clerkId);
-        const resume = await db
+        const resumeList = await db
             .select()
             .from(resumes)
             .where(eq(resumes.userId, userId));
 
-        return resume.map((resume) =>
+        return resumeList;
+    }
+
+    static async getFormattedResumeForAI(clerkId: string) {
+        const userId = await this.getInternalUserId(clerkId);
+        const resumeList = await db
+            .select()
+            .from(resumes)
+            .where(eq(resumes.userId, userId));
+
+        return resumeList.map((resume) =>
             Object.entries(resume)
                 .map(([key, value]) => `${key}: ${JSON.stringify(value)}`)
                 .join("\n")
