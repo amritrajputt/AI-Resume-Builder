@@ -21,7 +21,7 @@ const getCode = inngest.createFunction(
     async ({ event, step }) => {
         await step.run("mark-generating", () => DataService.updateGenerationJob(event.data.jobId, "generating"));
         const resumeData = await step.run("get-resume-data", () =>
-            DataService.getFormattedResumeForAI(event.data.userId)
+            DataService.getFormattedResumeForAI(event.data.userId, event.data.resumeId)
         ).catch(async (error) => {
             await DataService.updateGenerationJob(
                 event.data.jobId,
