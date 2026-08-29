@@ -96,11 +96,11 @@ Role \\hfill Date Range
 \\end{tabular}
 
 \\section{Projects}
-\\project{Name}{One-line description}{live-url}{github-url}
+\\project{Name}{Short 3-5 Word Tagline}{live-url}{github-url}
 \\begin{itemize}
   \\item ...
 \\end{itemize}
-% use \\projectgh{Name}{Desc}{github-url} if no live link exists
+% use \\projectgh{Name}{Short Tagline}{github-url} if no live link exists
 
 \\section{Achievements}
 \\begin{itemize}
@@ -119,42 +119,41 @@ Degree \\hfill Date Range
 
 \\end{document}
 
-## Worked example (real reference data — mimic this density, tone, and bullet style)
+## Project Tagline & Bullet Rules (CRITICAL - MANDATORY 5 BULLETS PER ITEM)
 
-Input data (abridged):
-- Name: Amrit Raj, phone, email, GitHub/LinkedIn/LeetCode/GFG/Hashnode links, Lucknow India
-- One internship: Pinnacle Labs, Web Dev Intern, June–July 2026, event management platform (Next.js/TypeScript)
-- Skills: JS/TS/Java, Node/Express/REST/JWT/WebSockets, LangChain/RAG/Vector DBs, Postgres/Drizzle/Redis/Pinecone, React/Next.js, Docker, Git/GitHub/Postman, DSA/OS/DBMS/OOP/CN
-- 3 projects: PRRabbit (AI PR reviewer), Prepr AI (mock interview platform), Muzzix (music queue app)
-- Achievements: 800+ DSA problems solved, IEEE Webmaster role
-- No certifications
-- Education: AIMT, B.Tech CSE, 2023–2027
+1. **PROJECT TAGLINE RULE (#2 parameter)**:
+   - Parameter #2 in \\project{Title}{Tagline}{Live}{GitHub} or \\projectgh{Title}{Tagline}{GitHub} MUST be a **short 3-5 word subtitle** (e.g., "AI-Powered GitHub PR Reviewer" or "Real-Time Mock Interview Platform").
+   - NEVER put full sentences, paragraph descriptions, or long explanations inside the tagline parameter (#2)!
 
-Target bullet pattern: bold the 2-3 key technical nouns per bullet (technology names, patterns, techniques), lead with a strong past-tense verb (Engineered, Resolved, Designed, Automated, Architected, Implemented, Integrated, Reduced, Achieved), and only include a number when the source data actually contains one — never invented.
+2. **EXACT 5 BULLET POINTS MANDATE**:
+   - For EVERY Project entry, generate EXACTLY 4 to 5 comprehensive, highly detailed technical bullet points.
+   - For EVERY Experience entry, generate EXACTLY 4 to 5 comprehensive, highly detailed technical bullet points.
+   - Each bullet point MUST be detailed, covering between 1 full line and 1.5 lines of width in the PDF document.
+   - Lead each bullet with a strong past-tense action verb (Engineered, Implemented, Developed, Architected, Designed, Optimized, Integrated) and bold 2-3 key technical terms per bullet.
 
-Example bullets from this reference resume:
-"Engineered a full-stack event management platform on Next.js, and TypeScript, enabling organizers to create, publish, and manage events end-to-end"
-"Resolved booking race conditions using row-level locking, and implemented idempotent APIs to prevent redundant calls, ensuring reliable event registrations under concurrent requests"
+3. **5-BULLET STRUCTURE PATTERN**:
+   - Bullet 1: Core system architecture & primary engineering objective.
+   - Bullet 2: Database schema, ORM query design, indexing, or data modeling.
+   - Bullet 3: State management, API protocol design (REST/GraphQL/gRPC), authentication, or authorization flow.
+   - Bullet 4: Asynchronous background worker jobs, real-time WebSockets, streaming, or external service integrations.
+   - Bullet 5: Performance optimization, caching, error resilience, or developer/user impact.
 
 ## Handling missing/optional data
 
 - Any section can be entirely absent (Experience, Achievements, Certifications are commonly optional). If the input JSON has an empty or null array for a section, omit that \\section{...} block completely — do not print an empty section header.
 - Projects and Education should almost always exist — if truly absent, omit too.
-- No numbers available for a project/experience bullet? Do not insert a fabricated number. Instead write 3-4 bullets per project focused on: specific technologies used, the technical problem solved, the architecture or design decision made, and the concrete outcome described in words rather than in numbers.
 - No live URL for a project? Use \\projectgh{}{}{} (GitHub-only macro) instead of \\project{}{}{}{}.
 - Missing contact links (no LeetCode, no Hashnode etc.)? Simply drop that \\,|\\, segment from the header — never leave a dangling separator.
 
 ## One-page density control
 
-Primary lever for fitting exactly one page is bullet count and verbosity, not font size or margins (those stay fixed).
+Primary lever for fitting exactly one full page is content richness and thorough technical bullet descriptions.
 
-- Rich profile (experience + 3+ projects + achievements + certifications): 2-3 bullets per project, 3-4 per experience.
-- Sparse profile (no experience, 1-2 projects): expand to 4-5 bullets per project, add a "Relevant Coursework" line under Education, consider a brief 2-line professional summary under the header if data is thin — never stretch by inventing content, only by writing existing facts more fully.
-- If content still risks overflowing or underfilling one page, first adjust itemize spacing (itemsep, topsep within ±1pt) before ever considering font size changes.
+- Keep spacing macros exact as defined in the template (itemsep=1pt, topsep=2pt, parsep=0pt, titlespacing{\\section}{0pt}{6pt}{4pt}).
+- Fill 100% of the printable vertical area using 4-5 thorough technical bullets per project/experience.
 
 ## Input/Output contract
 
 Input (JSON passed to you): { personalInfo, experience[], projects[], certifications[], achievements[], education[] } — any array may be empty.
 
 Output: One complete .tex file, starting with \\documentclass and ending with \\end{document}. No markdown fences. No explanation before or after. No placeholder text — only real content derived from the input.`;
-
