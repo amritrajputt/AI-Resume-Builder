@@ -7,10 +7,23 @@ import { promisify } from "node:util";
 const execFileAsync = promisify(execFile);
 const COMPILE_TIMEOUT_MS = 25_000;
 
+function formatDockerVolumePath(dir: string): string {
+    const absolutePath = path.resolve(dir);
+    if (process.platform === "win32") {
+        const match = absolutePath.match(/^([A-Za-z]):[/\\](.*)$/);
+        if (match && match[1] && match[2] !== undefined) {
+            const driveLetter = match[1].toLowerCase();
+            const relativePath = match[2].replace(/\\/g, "/");
+            return `/${driveLetter}/${relativePath}`;
+        }
+    }
+    return absolutePath.replace(/\\/g, "/");
+}
+
 export class TexSandboxService {
     static async compile(texFile: string): Promise<string> {
         const workdir = await fs.mkdtemp(path.join(os.tmpdir(), "resume-tex-"));
-        const normalizedWorkdir = workdir.replace(/\\/g, "/");
+        const mountPath = formatDockerVolumePath(workdir);
         const texPath = path.join(workdir, "resume.tex");
         const pdfPath = path.join(workdir, "resume.pdf");
         const logPath = path.join(workdir, "resume.log");
@@ -25,7 +38,7 @@ export class TexSandboxService {
                 "--memory", "512m",
                 "--cpus", "1",
                 "--pids-limit", "128",
-                "-v", `${normalizedWorkdir}:/workspace:rw`,
+                "-v", `${mountPath}:/workspace:rw`,
                 "-w", "/workspace",
                 "--cap-drop", "ALL",
                 "--security-opt", "no-new-privileges",
