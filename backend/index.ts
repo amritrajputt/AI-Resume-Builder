@@ -11,7 +11,7 @@ import { errorHandler } from './src/common/middleware/error.middleware';
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: [process.env.FRONTEND_URL ?? 'http://localhost:3000', 'http://localhost:3000', 'http://localhost:3001'],
+  origin: true,
   credentials: true,
 }));
 app.use('/api/inngest', serve({ client: inngest, functions }));
