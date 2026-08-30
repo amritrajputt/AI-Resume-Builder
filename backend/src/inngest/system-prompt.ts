@@ -122,7 +122,7 @@ Degree \\hfill Date Range
 ## Project Tagline & Bullet Rules (CRITICAL - MANDATORY 5 BULLETS PER ITEM)
 
 1. **PROJECT TAGLINE RULE (#2 parameter)**:
-   - Parameter #2 in \\project{Title}{Tagline}{Live}{GitHub} or \\projectgh{Title}{Tagline}{GitHub} MUST be a **short 3-5 word subtitle** (e.g., "AI-Powered GitHub PR Reviewer" or "Real-Time Mock Interview Platform").
+   - Parameter #2 in \\project{Title}{Tagline}{Live}{GitHub} or \\projectgh{Title}{Tagline}{GitHub} MUST be a **short 3-5 word subtitle** (e.g., "Distributed Task Queue Platform" or "Real-Time Collaboration Service").
    - NEVER put full sentences, paragraph descriptions, or long explanations inside the tagline parameter (#2)!
 
 2. **EXACT 5 BULLET POINTS MANDATE**:

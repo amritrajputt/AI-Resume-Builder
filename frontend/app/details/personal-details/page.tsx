@@ -24,7 +24,7 @@ export default function PersonalDetails() {
           <input
             type="text"
             required
-            placeholder="amrit"
+            placeholder="e.g. John Doe"
             value={draft.name}
             onChange={(e) => updateDraft({ name: e.target.value })}
             className="w-full rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
@@ -37,7 +37,7 @@ export default function PersonalDetails() {
             <input
               type="email"
               required
-              placeholder="amrit@example.com"
+              placeholder="e.g. alex@example.com"
               value={draft.email}
               onChange={(e) => updateDraft({ email: e.target.value })}
               className="w-full rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
@@ -48,7 +48,7 @@ export default function PersonalDetails() {
             <label className="block text-xs font-semibold text-gray-600 mb-1">Phone Number</label>
             <input
               type="tel"
-              placeholder="+91 9999910101"
+              placeholder="e.g. +1 (555) 000-0000"
               value={draft.phone || ""}
               onChange={(e) => updateDraft({ phone: e.target.value })}
               className="w-full rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"

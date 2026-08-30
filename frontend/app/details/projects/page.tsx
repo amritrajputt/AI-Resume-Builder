@@ -163,7 +163,7 @@ export default function ProjectsPage() {
               <input
                 type="text"
                 required
-                placeholder="e.g. PRRabbit - Automated AI Code Reviewer"
+                placeholder="e.g. Real-Time Collaborative Canvas"
                 value={item.title}
                 onChange={(e) =>
                   handleFieldChange(index, "title", e.target.value)
@@ -232,7 +232,7 @@ export default function ProjectsPage() {
               <textarea
                 rows={3}
                 required
-                placeholder="Describe what the project does, technologies, and measurable impact (e.g. Built automated webhook triggers, indexed 10k+ PR diffs, reduced latency by 35%)..."
+                placeholder="Describe what the project does, key features, and measurable impact (e.g. Built WebSocket synchronization engine, handled 10k+ concurrent users, reduced latency by 35%)..."
                 value={item.description}
                 onChange={(e) =>
                   handleFieldChange(index, "description", e.target.value)
