@@ -213,8 +213,29 @@ export default function ReviewPage() {
       {(() => {
         const expCount = Array.isArray(draft.experience) ? draft.experience.length : 0;
         const projCount = Array.isArray(draft.projects) ? draft.projects.length : 0;
-        const isFresher = expCount === 0;
-        const isOptimal = isFresher ? projCount >= 3 : projCount >= 2;
+
+        let message = "";
+        let isOptimal = false;
+
+        if (expCount === 0) {
+          isOptimal = projCount >= 3;
+          message = isOptimal
+            ? `Fresher Profile (0 Exp): ${projCount} detailed projects added. Perfect to fill 1 full page!`
+            : `Fresher Profile (0 Exp): ${projCount}/3–4 projects added. Adding 3–4 detailed projects with numbers & impact is recommended to fill 1 full page.`;
+        } else if (expCount === 1) {
+          isOptimal = projCount >= 3;
+          message = isOptimal
+            ? `1 Experience Profile: ${projCount} projects added. Perfect balance to fill 1 full page!`
+            : `1 Experience Profile: ${projCount}/3 projects added. Adding at least 3 projects with metrics/impact is recommended to fill the page.`;
+        } else if (expCount === 2) {
+          isOptimal = projCount >= 2;
+          message = isOptimal
+            ? `2 Experiences Profile: ${projCount} projects added. Clean, balanced 1-page layout!`
+            : `2 Experiences Profile: ${projCount}/2 projects added. Adding 2 projects with strong numbers/impact is recommended.`;
+        } else {
+          isOptimal = projCount >= 1;
+          message = `Experienced Profile (${expCount} jobs): ${projCount} projects added. Ideal for keeping strictly to 1 page.`;
+        }
 
         return (
           <div className={`p-3.5 rounded-xl border text-xs flex items-center justify-between ${
@@ -224,11 +245,7 @@ export default function ReviewPage() {
           }`}>
             <div className="flex items-center gap-2.5">
               <span className="text-base">{isOptimal ? "✨" : "💡"}</span>
-              <span>
-                {isFresher
-                  ? `Fresher Profile: ${projCount}/3 projects added. ${projCount < 3 ? "Adding 3 projects is recommended to fill 1 full page." : "Great job! 3+ projects will fill 1 full page."}`
-                  : `Experienced Profile: ${expCount} experience & ${projCount}/2 projects added. Ideal for a clean 1-page layout.`}
-              </span>
+              <span>{message}</span>
             </div>
             {!isOptimal && (
               <Link

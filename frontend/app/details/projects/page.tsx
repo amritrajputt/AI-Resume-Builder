@@ -67,7 +67,6 @@ export default function ProjectsPage() {
 
   const experienceCount = Array.isArray(draft.experience) ? draft.experience.length : 0;
   const projectCount = projectsList.length;
-  const isFresher = experienceCount === 0;
 
   return (
     <div className="w-full max-w-xl my-20 mr-50">
@@ -85,13 +84,24 @@ export default function ProjectsPage() {
           <p className="font-semibold text-slate-900 mb-0.5">
             Smart 1-Page Layout Tip
           </p>
-          {isFresher ? (
+          {experienceCount === 0 && (
             <span>
-              Since you have <strong className="text-blue-700 font-semibold">0 work experience</strong>, we recommend adding at least <strong className="text-blue-700 font-semibold">3 detailed projects</strong> to fill your 1-page resume perfectly. (Currently: <span className={projectCount >= 3 ? "text-emerald-700 font-bold" : "text-amber-600 font-bold"}>{projectCount}/3 added</span>)
+              With <strong className="text-blue-700 font-semibold">0 work experience</strong>, we recommend adding <strong className="text-blue-700 font-semibold">3–4 detailed projects</strong> with numbers &amp; measurable impact (scale, % speedup, users) to fill your 1-page resume completely. (Currently: <span className={projectCount >= 3 ? "text-emerald-700 font-bold" : "text-amber-600 font-bold"}>{projectCount}/3–4 added</span>)
             </span>
-          ) : (
+          )}
+          {experienceCount === 1 && (
             <span>
-              For profiles with work experience, adding <strong className="text-blue-700 font-semibold">2 strong projects</strong> is recommended to fill 1 page cleanly. (Currently: <span className={projectCount >= 2 ? "text-emerald-700 font-bold" : "text-amber-600 font-bold"}>{projectCount}/2 added</span>)
+              With <strong className="text-blue-700 font-semibold">1 work experience</strong>, put <strong className="text-blue-700 font-semibold">at least 3 detailed projects</strong> with numbers &amp; impact to fill the 1-page layout nicely. (Currently: <span className={projectCount >= 3 ? "text-emerald-700 font-bold" : "text-amber-600 font-bold"}>{projectCount}/3 added</span>)
+            </span>
+          )}
+          {experienceCount === 2 && (
+            <span>
+              With <strong className="text-blue-700 font-semibold">2 work experiences</strong>, adding <strong className="text-blue-700 font-semibold">2 projects</strong> with strong numbers &amp; impact provides the perfect 1-page balance. (Currently: <span className={projectCount >= 2 ? "text-emerald-700 font-bold" : "text-amber-600 font-bold"}>{projectCount}/2 added</span>)
+            </span>
+          )}
+          {experienceCount >= 3 && (
+            <span>
+              With <strong className="text-blue-700 font-semibold">{experienceCount} work experiences</strong>, include <strong className="text-blue-700 font-semibold">1–2 projects</strong> to ensure everything fits cleanly on 1 page without spilling over. (Currently: <span className={projectCount >= 1 ? "text-emerald-700 font-bold" : "text-amber-600 font-bold"}>{projectCount}/2 added</span>)
             </span>
           )}
         </div>
@@ -222,13 +232,16 @@ export default function ProjectsPage() {
               <textarea
                 rows={3}
                 required
-                placeholder="Describe what the project does, problems solved, and measurable impact (e.g. Built automated webhook triggers, indexed 10k+ PR diffs...)"
+                placeholder="Describe what the project does, technologies, and measurable impact (e.g. Built automated webhook triggers, indexed 10k+ PR diffs, reduced latency by 35%)..."
                 value={item.description}
                 onChange={(e) =>
                   handleFieldChange(index, "description", e.target.value)
                 }
                 className="w-full rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 resize-y"
               />
+              <p className="text-[11px] text-gray-400 mt-1">
+                💡 Include quantified impact, numbers, and scale (e.g., 10k+ users, 40% speedup, 95% test coverage). Our AI will format these into high-impact LaTeX bullet points.
+              </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
