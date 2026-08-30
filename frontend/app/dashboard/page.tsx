@@ -225,6 +225,27 @@ export default function DashboardPage() {
             </p>
           </div>
         )}
+
+        {/* Feature Request & Bug Report Banner */}
+        <div className="rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50/80 via-white to-indigo-50/70 p-5 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            
+            <div>
+              <h3 className="text-sm font-bold text-gray-900">Feature Request or Bug Report?</h3>
+              <p className="text-xs text-gray-500">
+                Found an issue or want a new feature/template? Send an email directly.
+              </p>
+            </div>
+          </div>
+          <a
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=amrit.createch@gmail.com&su=%5BResumio%20Feature%20Request%20/%20Bug%20Report%5D&body=Hi%20Amrit,%0A%0AI'd%20love%20to%20request%20the%20following%20feature%20or%20report%20a%20bug:%0A%0A"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs px-4 py-2.5 rounded-lg transition shadow-xs whitespace-nowrap flex items-center gap-1.5"
+          >
+            <span>✉️</span> Send Request / Bug Report
+          </a>
+        </div>
       </main>
     </div>
   );

@@ -251,6 +251,15 @@ Open `http://localhost:3000` in your browser.
 
 ---
 
+## Feature Requests & Bug Reports
+
+Found a bug or have ideas for new LaTeX templates, section types, or AI tuning? Feel free to reach out directly:
+
+- **Email Direct**: [amrit.createch@gmail.com](mailto:amrit.createch@gmail.com?subject=%5BResumio%20Feature%20Request%20/%20Bug%20Report%5D)
+- **GitHub Issues**: Open a feature request or bug report on the GitHub repository.
+
+---
+
 ## License
 
 This project is released under the **MIT License**.

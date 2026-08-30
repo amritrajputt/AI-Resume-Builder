@@ -4,18 +4,56 @@ import Link from "next/link";
 import Image from "next/image";
 import { UserButton, useAuth, useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+
 export default function Home() {
   const { isLoaded, isSignedIn } = useAuth();
-  const { openSignIn, openSignUp } = useClerk();
-const router = useRouter();
-const handleGetStarted = () => {
-  if (!isLoaded) return;
-  if (!isSignedIn) {
-    openSignIn();
-  } else {
-    router.push("/details/personal-details");
-  }
-}
+  const { openSignIn } = useClerk();
+  const router = useRouter();
+
+  const [featureCategory, setFeatureCategory] = useState("New Feature");
+  const [featureDescription, setFeatureDescription] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [sentFeedback, setSentFeedback] = useState(false);
+
+  const handleGetStarted = () => {
+    if (!isLoaded) return;
+    if (!isSignedIn) {
+      openSignIn();
+    } else {
+      router.push("/details/personal-details");
+    }
+  };
+
+  const [copiedEmail, setCopiedEmail] = useState(false);
+
+  const getMailData = () => {
+    const subject = `[Resumio] ${featureCategory}`;
+    const body = `Hi Amrit,\n\nI want to submit the following ${featureCategory.toLowerCase()}:\n\nDetails:\n${featureDescription || "(Describe your request here)"}\n\nFrom: ${userEmail || "A Resumio User"}`;
+    return { subject, body };
+  };
+
+  const handleOpenGmail = () => {
+    const { subject, body } = getMailData();
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=amrit.createch@gmail.com&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.open(gmailUrl, "_blank", "noopener,noreferrer");
+  };
+
+  const handleSendFeatureRequest = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!featureDescription.trim()) return;
+
+    const { subject, body } = getMailData();
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=amrit.createch@gmail.com&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.open(gmailUrl, "_blank", "noopener,noreferrer");
+    setSentFeedback(true);
+  };
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText("amrit.createch@gmail.com");
+    setCopiedEmail(true);
+    setTimeout(() => setCopiedEmail(false), 2500);
+  };
 
   return (
     <main className="site-shell">
@@ -25,13 +63,13 @@ const handleGetStarted = () => {
           <Link className="home-link" href="#top">Home</Link>
           <Link className="templates-link" href="/browse-template">Templates</Link>
           <a className="how-it-works-link" href="#how-it-works">How it works</a>
+          <a className="feature-link text-blue-600 font-medium" href="#feature-request">Feature / Bug Report 💡</a>
         </div>
         <div className="nav-actions">
           {isSignedIn && <UserButton />}
           {isLoaded && !isSignedIn && (
             <button onClick={() => openSignIn()} className="text-button">Sign in</button>
           )}
-          
         </div>
       </nav>
 
@@ -126,10 +164,116 @@ const handleGetStarted = () => {
         </div>
       </section>
 
-      <section className="bottom-tease" id="templates"><span className="sparkle">✦</span><strong>Build a resume you’re proud of.</strong><span>Fast, clear, and made to get noticed.</span></section>
+      {/* Feature Request & Bug Report Section */}
+      <section id="feature-request" className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="rounded-3xl border border-blue-100 bg-gradient-to-b from-blue-50/70 via-white to-indigo-50/40 p-8 sm:p-12 shadow-sm text-center">
+          <div className="inline-flex items-center gap-2 rounded-full bg-blue-100/80 px-3.5 py-1 text-xs font-bold text-blue-800 uppercase tracking-wider mb-4">
+            <span>💡</span> Feature Request &amp; Bug Report
+          </div>
+          <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            Request a Feature or Report a Bug
+          </h2>
+          <p className="mt-3 text-sm sm:text-base text-slate-600 max-w-xl mx-auto">
+            Found an issue, need a specific LaTeX template, or have an idea to improve Resumio? Send me an email directly.
+          </p>
 
-      <div className="pb-8 text-center text-sm font-medium text-slate-500">
-        Made with love by <span className="font-semibold text-slate-700">Amrit</span>
+          <form onSubmit={handleSendFeatureRequest} className="mt-8 max-w-lg mx-auto space-y-4 text-left">
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                Type
+              </label>
+              <select
+                value={featureCategory}
+                onChange={(e) => setFeatureCategory(e.target.value)}
+                className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              >
+                <option value="Resume Section Request">📄 Resume Section Request (e.g. Publications, Volunteer, Custom)</option>
+                <option value="Feature Request">✨ Feature Request</option>
+                <option value="Bug Report">🐛 Bug Report</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                Your Email (Optional, for a response)
+              </label>
+              <input
+                type="email"
+                placeholder="your.email@example.com"
+                value={userEmail}
+                onChange={(e) => setUserEmail(e.target.value)}
+                className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                Description *
+              </label>
+              <textarea
+                rows={3}
+                required
+                placeholder={
+                  featureCategory === "Bug Report"
+                    ? "Describe what went wrong and how to reproduce it..."
+                    : featureCategory === "Resume Section Request"
+                    ? "What section would you like to see added (e.g. Publications, Volunteering, Leadership, Coursework, Certifications)?"
+                    : "Describe the feature you'd like to see added..."
+                }
+                value={featureDescription}
+                onChange={(e) => setFeatureDescription(e.target.value)}
+                className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-y"
+              />
+            </div>
+
+            <div className="space-y-3 pt-2">
+              <button
+                type="submit"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm px-6 py-3 rounded-xl transition shadow-xs flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span>✉️</span> Send via Gmail
+              </button>
+
+              <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs text-slate-500">
+                <span>Or mail directly: <strong className="text-slate-800 font-mono">amrit.createch@gmail.com</strong></span>
+                <button
+                  type="button"
+                  onClick={handleCopyEmail}
+                  className="text-blue-600 hover:text-blue-800 font-medium hover:underline flex items-center gap-1 cursor-pointer"
+                >
+                  {copiedEmail ? "✓ Copied!" : "📋 Copy Email"}
+                </button>
+              </div>
+            </div>
+
+            {sentFeedback && (
+              <p className="text-xs text-emerald-700 font-semibold text-center pt-2">
+                ✓ Opening your email composer! If it didn&apos;t open, copy the email above.
+              </p>
+            )}
+          </form>
+        </div>
+      </section>
+
+      <section className="bottom-tease" id="templates">
+        <span className="sparkle">✦</span>
+        <strong>Build a resume you’re proud of.</strong>
+        <span>Fast, clear, and made to get noticed.</span>
+      </section>
+
+      <div className="pb-8 text-center text-sm font-medium text-slate-500 flex flex-col items-center gap-2">
+        <div>
+          Made with love by <span className="font-semibold text-slate-700">Amrit</span>
+        </div>
+        <div className="text-xs text-slate-400">
+          Got ideas or questions?{" "}
+          <a
+            href="mailto:amrit.createch@gmail.com?subject=Resumio%20Feedback"
+            className="text-blue-600 hover:underline font-medium"
+          >
+            amrit.createch@gmail.com
+          </a>
+        </div>
       </div>
     </main>
   );

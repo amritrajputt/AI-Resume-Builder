@@ -91,8 +91,20 @@ export default function DetailsLayout({
               })}
             </nav>
 
+            {/* Request section / Feature */}
+            <div className="pt-4 mt-auto border-t border-gray-100 max-lg:hidden">
+              <a
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=amrit.createch@gmail.com&su=%5BResumio%20Resume%20Section%20Request%5D&body=Hi%20Amrit,%0A%0AI%20would%20like%20to%20request%20the%20following%20resume%20section%20(e.g.%20Publications,%20Volunteering,%20Coursework,%20Leadership):%0A%0A"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-800 font-medium py-1 px-1 rounded transition"
+              >
+                <span>➕</span> Request a New Section
+              </a>
+            </div>
+
             {/* Progress footer */}
-            <div className="border-t border-gray-100 pt-4 mt-auto flex items-center gap-3 max-lg:border-t-0 max-lg:pt-0 max-lg:mt-0 max-lg:ml-4">
+            <div className="pt-3 flex items-center gap-3 max-lg:border-t-0 max-lg:pt-0 max-lg:mt-0 max-lg:ml-4">
               <div className="w-full bg-gray-100 rounded-full h-1.5 max-w-[120px] max-lg:w-16">
                 <div
                   className="bg-blue-600 h-1.5 rounded-full transition-all duration-500"
