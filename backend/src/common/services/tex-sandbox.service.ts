@@ -61,22 +61,13 @@ export class TexSandboxService {
                     maxBuffer: 2 * 1024 * 1024,
                     signal: AbortSignal.timeout(COMPILE_TIMEOUT_MS),
                 });
-                if (stderr) {
-                    console.warn("[LaTeX] pdflatex stderr:", stderr.slice(0, 500));
-                }
                 pdflatexSucceeded = true;
             } catch (err: any) {
                 lastError = err;
                 if (err.name === "AbortError") {
                     throw new Error("LaTeX compilation timed out after 30s");
                 }
-                // Log the actual pdflatex output for debugging
-                if (err.stdout) {
-                    console.warn("[LaTeX] pdflatex stdout on error:", err.stdout.slice(-1000));
-                }
-                if (err.stderr) {
-                    console.warn("[LaTeX] pdflatex stderr on error:", err.stderr.slice(-500));
-                }
+
             }
 
             // Check if PDF was created even if pdflatex exited non-zero
@@ -84,7 +75,6 @@ export class TexSandboxService {
             try {
                 const pdfBuffer = await fs.readFile(pdfPath);
                 if (pdfBuffer.length > 0) {
-                    console.log(`[LaTeX] PDF generated successfully (${pdfBuffer.length} bytes)${pdflatexSucceeded ? "" : " despite pdflatex warnings"}`);
                     return pdfBuffer.toString("base64");
                 }
             } catch {
@@ -102,7 +92,6 @@ export class TexSandboxService {
             if (logContent) {
                 const errorLines = logContent.split("\n").filter((l) => l.startsWith("!"));
                 const firstError = errorLines[0];
-                console.error("[LaTeX] Compilation errors:", errorLines.join(" | "));
                 throw new Error(firstError || "LaTeX compilation failed — check logs");
             }
 
