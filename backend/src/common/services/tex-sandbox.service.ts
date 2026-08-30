@@ -5,7 +5,7 @@ import path from "node:path";
 import { promisify } from "node:util";
 
 const execFileAsync = promisify(execFile);
-const COMPILE_TIMEOUT_MS = 25_000;
+const COMPILE_TIMEOUT_MS = 30_000;
 
 function formatDockerVolumePath(dir: string): string {
     const absolutePath = path.resolve(dir);
@@ -31,7 +31,9 @@ export class TexSandboxService {
         await fs.writeFile(texPath, texFile, "utf8");
 
         try {
-            await execFileAsync("docker", [
+            // Use -interaction=nonstopmode WITHOUT -halt-on-error
+            // This allows pdflatex to continue past minor errors and still produce a PDF
+            const dockerArgs = [
                 "run",
                 "--rm",
                 "--network", "none",
@@ -45,28 +47,65 @@ export class TexSandboxService {
                 "blang/latex:ubuntu",
                 "pdflatex",
                 "-interaction=nonstopmode",
-                "-halt-on-error",
                 "-no-shell-escape",
                 "resume.tex",
-            ], {
-                maxBuffer: 1024 * 1024,
-                signal: AbortSignal.timeout(COMPILE_TIMEOUT_MS),
-            });
+            ];
 
-            const pdfBuffer = await fs.readFile(pdfPath);
-            return pdfBuffer.toString("base64");
-        } catch (err: any) {
-            if (err.name === "AbortError") {
-                throw new Error("LaTeX compilation timed out after 25s");
+            let pdflatexSucceeded = false;
+            let lastError: any = null;
+
+            try {
+                const { stdout, stderr } = await execFileAsync("docker", dockerArgs, {
+                    maxBuffer: 2 * 1024 * 1024,
+                    signal: AbortSignal.timeout(COMPILE_TIMEOUT_MS),
+                });
+                if (stderr) {
+                    console.warn("[LaTeX] pdflatex stderr:", stderr.slice(0, 500));
+                }
+                pdflatexSucceeded = true;
+            } catch (err: any) {
+                lastError = err;
+                if (err.name === "AbortError") {
+                    throw new Error("LaTeX compilation timed out after 30s");
+                }
+                // Log the actual pdflatex output for debugging
+                if (err.stdout) {
+                    console.warn("[LaTeX] pdflatex stdout on error:", err.stdout.slice(-1000));
+                }
+                if (err.stderr) {
+                    console.warn("[LaTeX] pdflatex stderr on error:", err.stderr.slice(-500));
+                }
             }
+
+            // Check if PDF was created even if pdflatex exited non-zero
+            // (pdflatex often produces a valid PDF despite warnings/minor errors)
+            try {
+                const pdfBuffer = await fs.readFile(pdfPath);
+                if (pdfBuffer.length > 0) {
+                    console.log(`[LaTeX] PDF generated successfully (${pdfBuffer.length} bytes)${pdflatexSucceeded ? "" : " despite pdflatex warnings"}`);
+                    return pdfBuffer.toString("base64");
+                }
+            } catch {
+                // PDF doesn't exist — fall through to error handling
+            }
+
+            // If we get here, no PDF was produced — read the log for the actual error
             let logContent = "";
             try {
                 logContent = await fs.readFile(logPath, "utf8");
             } catch {
                 // log may not exist if docker failed before running pdflatex
             }
-            const errorLine = logContent.split("\n").find((l) => l.startsWith("!"));
-            throw new Error(errorLine || err.message || "LaTeX compilation failed");
+
+            if (logContent) {
+                const errorLines = logContent.split("\n").filter((l) => l.startsWith("!"));
+                const firstError = errorLines[0];
+                console.error("[LaTeX] Compilation errors:", errorLines.join(" | "));
+                throw new Error(firstError || "LaTeX compilation failed — check logs");
+            }
+
+            // No log, no PDF — Docker itself likely failed
+            throw new Error(lastError?.message || "LaTeX compilation failed — Docker error");
         } finally {
             await fs.rm(workdir, { recursive: true, force: true }).catch(() => undefined);
         }
