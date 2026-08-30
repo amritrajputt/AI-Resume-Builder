@@ -31,7 +31,6 @@ export default function ReviewPage() {
 
   const pdfRef = useRef<HTMLDivElement | null>(null);
 
-  // Poll generation status
   useEffect(() => {
     if (!jobId || jobStatus === "completed" || jobStatus === "failed") return;
 
@@ -98,7 +97,6 @@ export default function ReviewPage() {
     setJobStatus("queued");
 
     try {
-      // 1. Save Resume Details to backend
       const res = await saveResume();
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
@@ -114,7 +112,6 @@ export default function ReviewPage() {
 
       window.sessionStorage.setItem("resumio-saved-resume-id", savedResume.id);
 
-      // 2. Trigger Inngest AI generation
       const token = await getToken();
       if (!token) {
         throw new Error("You must be logged in to generate your resume.");
@@ -158,12 +155,11 @@ export default function ReviewPage() {
 
   return (
     <div className="w-full max-w-2xl my-16 mr-20 space-y-6">
-      {/* Header */}
-      <div className="border-b border-gray-200 pb-4">
+      <div className="border-b border-gray-200 dark:border-slate-800 pb-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Review &amp; Generate Resume</h2>
-            <p className="text-sm text-gray-500 mt-1">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100">Review &amp; Generate Resume</h2>
+            <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
               Verify your information, then click Generate to produce your ATS-optimized PDF resume.
             </p>
           </div>
@@ -175,7 +171,7 @@ export default function ReviewPage() {
                 className={`text-xs px-3 py-1.5 rounded-lg font-medium transition ${
                   activeTab === "review"
                     ? "bg-blue-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    : "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700"
                 }`}
               >
                 Review Details
@@ -186,7 +182,7 @@ export default function ReviewPage() {
                 className={`text-xs px-3 py-1.5 rounded-lg font-medium transition ${
                   activeTab === "pdf"
                     ? "bg-green-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    : "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700"
                 }`}
               >
                 View PDF
@@ -197,7 +193,7 @@ export default function ReviewPage() {
       </div>
 
       {errorMsg && (
-        <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-start justify-between">
+        <div className="p-4 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm flex items-start justify-between">
           <span>{errorMsg}</span>
           <button
             type="button"
@@ -209,7 +205,6 @@ export default function ReviewPage() {
         </div>
       )}
 
-      {/* Smart Density Suggestion Banner */}
       {(() => {
         const expCount = Array.isArray(draft.experience) ? draft.experience.length : 0;
         const projCount = Array.isArray(draft.projects) ? draft.projects.length : 0;
@@ -240,8 +235,8 @@ export default function ReviewPage() {
         return (
           <div className={`p-3.5 rounded-xl border text-xs flex items-center justify-between ${
             isOptimal
-              ? "bg-emerald-50/80 border-emerald-200 text-emerald-800"
-              : "bg-amber-50/90 border-amber-200 text-amber-800"
+              ? "bg-emerald-50/80 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300"
+              : "bg-amber-50/90 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300"
           }`}>
             <div className="flex items-center gap-2.5">
               <span className="text-base">{isOptimal ? "✨" : "💡"}</span>
@@ -250,7 +245,7 @@ export default function ReviewPage() {
             {!isOptimal && (
               <Link
                 href="/details/projects"
-                className="font-semibold text-amber-900 underline hover:text-amber-700 whitespace-nowrap ml-2"
+                className="font-semibold text-amber-900 dark:text-amber-200 underline hover:text-amber-700 whitespace-nowrap ml-2"
               >
                 + Add Projects
               </Link>
@@ -259,14 +254,12 @@ export default function ReviewPage() {
         );
       })()}
 
-      {/* Generation Callout Card */}
-      <div className="rounded-2xl border-2 border-blue-200 bg-gradient-to-br from-blue-50/70 via-indigo-50/40 to-purple-50/50 p-6 shadow-sm space-y-4">
+      <div className="rounded-2xl border-2 border-blue-200 dark:border-blue-900/60 bg-gradient-to-br from-blue-50/70 via-indigo-50/40 to-purple-50/50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 p-6 shadow-sm space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            
             <div>
-              <h3 className="text-base font-bold text-gray-900">AI LaTeX Resume Engine</h3>
-              <p className="text-xs text-gray-500">
+              <h3 className="text-base font-bold text-gray-900 dark:text-slate-100">AI LaTeX Resume Engine</h3>
+              <p className="text-xs text-gray-500 dark:text-slate-400">
                 Powered by Inngest &amp; GPT-4o with sandboxed LaTeX compilation.
               </p>
             </div>
@@ -282,9 +275,8 @@ export default function ReviewPage() {
           )}
         </div>
 
-        {/* Custom AI Prompt Input */}
         <div>
-          <label className="block text-xs font-semibold text-gray-700 mb-1">
+          <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1">
             Custom Prompt / Target Role (Optional)
           </label>
           <input
@@ -293,11 +285,10 @@ export default function ReviewPage() {
             onChange={(e) => setAiPrompt(e.target.value)}
             disabled={isGenerating}
             placeholder="e.g. Focus on Backend &amp; Distributed Systems, high-density bullet points..."
-            className="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2 text-xs text-gray-800 outline-none focus:border-blue-500 disabled:bg-gray-100"
+            className="w-full rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2 text-xs text-gray-800 dark:text-slate-200 outline-none focus:border-blue-500 disabled:bg-gray-100 dark:disabled:bg-slate-900"
           />
         </div>
 
-        {/* Generate Button & Progress */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
           <button
             type="button"
@@ -351,7 +342,7 @@ export default function ReviewPage() {
                     : "bg-blue-500 animate-ping"
                 }`}
               />
-              <span className="text-gray-700 capitalize">
+              <span className="text-gray-700 dark:text-slate-300 capitalize">
                 {jobStatus === "queued" && "Queued in Inngest..."}
                 {jobStatus === "generating" && "AI Generating LaTeX code..."}
                 {jobStatus === "compiling" && "Sandboxed LaTeX Compilation..."}
@@ -363,11 +354,10 @@ export default function ReviewPage() {
         </div>
       </div>
 
-      {/* PDF View when ready */}
       {pdfUrl && activeTab === "pdf" && (
         <div ref={pdfRef} className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-bold text-gray-900">Compiled PDF Preview</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">Compiled PDF Preview</h3>
             <div className="flex items-center gap-2">
               <a
                 href={pdfUrl}
@@ -378,14 +368,14 @@ export default function ReviewPage() {
               </a>
               <Link
                 href="/dashboard"
-                className="text-xs text-blue-600 hover:text-blue-800 font-medium px-3 py-2 border border-blue-200 rounded-lg hover:bg-blue-50 transition"
+                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-3 py-2 border border-blue-200 dark:border-slate-700 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-800 transition"
               >
                 Dashboard →
               </Link>
             </div>
           </div>
 
-          <div className="rounded-xl border border-gray-200 bg-white overflow-hidden shadow-md h-[780px]">
+          <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden shadow-md h-[780px]">
             <iframe
               src={pdfUrl}
               className="w-full h-full border-none"
@@ -395,63 +385,60 @@ export default function ReviewPage() {
         </div>
       )}
 
-      {/* Details Review Section */}
       {activeTab === "review" && (
         <div className="space-y-4">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-gray-400">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500">
             Resume Summary Details
           </h3>
 
-          {/* 1. Personal Details */}
-          <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-xs space-y-3">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-2.5">
-              <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+          <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs space-y-3">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-800 pb-2.5">
+              <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
                 <span>👤</span> Personal Information
               </h4>
               <Link
                 href="/details/personal-details"
-                className="text-xs text-blue-600 hover:text-blue-800 font-medium px-2 py-1 rounded hover:bg-blue-50 transition"
+                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-slate-800 transition"
               >
                 ✏ Edit
               </Link>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-gray-600">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-gray-600 dark:text-slate-400">
               <div>
-                <span className="font-semibold text-gray-800">Full Name:</span>{" "}
+                <span className="font-semibold text-gray-800 dark:text-slate-200">Full Name:</span>{" "}
                 {draft.name || <span className="text-red-400 italic">Not set</span>}
               </div>
               <div>
-                <span className="font-semibold text-gray-800">Email:</span>{" "}
+                <span className="font-semibold text-gray-800 dark:text-slate-200">Email:</span>{" "}
                 {draft.email || <span className="text-red-400 italic">Not set</span>}
               </div>
               <div>
-                <span className="font-semibold text-gray-800">Phone:</span>{" "}
+                <span className="font-semibold text-gray-800 dark:text-slate-200">Phone:</span>{" "}
                 {draft.phone || <span className="text-gray-400">None</span>}
               </div>
               <div>
-                <span className="font-semibold text-gray-800">LinkedIn:</span>{" "}
+                <span className="font-semibold text-gray-800 dark:text-slate-200">LinkedIn:</span>{" "}
                 {draft.linkedin || <span className="text-gray-400">None</span>}
               </div>
               <div>
-                <span className="font-semibold text-gray-800">GitHub:</span>{" "}
+                <span className="font-semibold text-gray-800 dark:text-slate-200">GitHub:</span>{" "}
                 {draft.github || <span className="text-gray-400">None</span>}
               </div>
               <div>
-                <span className="font-semibold text-gray-800">Portfolio:</span>{" "}
+                <span className="font-semibold text-gray-800 dark:text-slate-200">Portfolio:</span>{" "}
                 {draft.portfolio || <span className="text-gray-400">None</span>}
               </div>
             </div>
           </div>
 
-          {/* 2. Education */}
-          <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-xs space-y-3">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-2.5">
-              <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+          <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs space-y-3">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-800 pb-2.5">
+              <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
                 <span>🎓</span> Education ({draft.education?.length || 0})
               </h4>
               <Link
                 href="/details/education"
-                className="text-xs text-blue-600 hover:text-blue-800 font-medium px-2 py-1 rounded hover:bg-blue-50 transition"
+                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-slate-800 transition"
               >
                 ✏ Edit
               </Link>
@@ -463,16 +450,16 @@ export default function ReviewPage() {
                 {draft.education.map((edu, idx) => (
                   <div
                     key={idx}
-                    className="p-3 bg-gray-50 rounded-lg text-xs flex items-center justify-between"
+                    className="p-3 bg-gray-50 dark:bg-slate-800/60 rounded-lg text-xs flex items-center justify-between"
                   >
                     <div>
-                      <p className="font-semibold text-gray-800">
+                      <p className="font-semibold text-gray-800 dark:text-slate-200">
                         {edu.degree} - {edu.institution || "Institution name"}
                       </p>
-                      <p className="text-gray-500">Graduation Year: {edu.year || "N/A"}</p>
+                      <p className="text-gray-500 dark:text-slate-400">Graduation Year: {edu.year || "N/A"}</p>
                     </div>
                     {edu.cgpa && (
-                      <span className="bg-blue-100 text-blue-800 font-semibold px-2 py-0.5 rounded text-[11px]">
+                      <span className="bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-300 font-semibold px-2 py-0.5 rounded text-[11px]">
                         CGPA/Score: {edu.cgpa}
                       </span>
                     )}
@@ -482,15 +469,14 @@ export default function ReviewPage() {
             )}
           </div>
 
-          {/* 3. Work Experience */}
-          <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-xs space-y-3">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-2.5">
-              <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+          <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs space-y-3">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-800 pb-2.5">
+              <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
                 <span>💼</span> Work Experience ({draft.experience?.length || 0})
               </h4>
               <Link
                 href="/details/experience"
-                className="text-xs text-blue-600 hover:text-blue-800 font-medium px-2 py-1 rounded hover:bg-blue-50 transition"
+                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-slate-800 transition"
               >
                 ✏ Edit
               </Link>
@@ -500,16 +486,16 @@ export default function ReviewPage() {
             ) : (
               <div className="space-y-3">
                 {draft.experience.map((exp, idx) => (
-                  <div key={idx} className="p-3 bg-gray-50 rounded-lg text-xs space-y-1.5">
-                    <div className="flex items-center justify-between font-semibold text-gray-800">
+                  <div key={idx} className="p-3 bg-gray-50 dark:bg-slate-800/60 rounded-lg text-xs space-y-1.5">
+                    <div className="flex items-center justify-between font-semibold text-gray-800 dark:text-slate-200">
                       <span>{exp.role || "Role"} at {exp.company || "Company"}</span>
-                      <span className="text-gray-500 text-[11px]">
+                      <span className="text-gray-500 dark:text-slate-400 text-[11px]">
                         {exp.startDate} - {exp.currentlyWorking ? "Present" : exp.endDate || "N/A"}
                       </span>
                     </div>
                     {exp.location && <p className="text-gray-400 text-[11px]">{exp.location}</p>}
                     {exp.description && (
-                      <p className="text-gray-600 whitespace-pre-line text-[11px] pt-1">
+                      <p className="text-gray-600 dark:text-slate-300 whitespace-pre-line text-[11px] pt-1">
                         {typeof exp.description === "string"
                           ? exp.description
                           : Array.isArray(exp.description)
@@ -523,15 +509,14 @@ export default function ReviewPage() {
             )}
           </div>
 
-          {/* 4. Projects */}
-          <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-xs space-y-3">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-2.5">
-              <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+          <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs space-y-3">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-800 pb-2.5">
+              <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
                 <span>🚀</span> Projects ({draft.projects?.length || 0})
               </h4>
               <Link
                 href="/details/projects"
-                className="text-xs text-blue-600 hover:text-blue-800 font-medium px-2 py-1 rounded hover:bg-blue-50 transition"
+                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-slate-800 transition"
               >
                 ✏ Edit
               </Link>
@@ -541,8 +526,8 @@ export default function ReviewPage() {
             ) : (
               <div className="space-y-3">
                 {draft.projects.map((proj, idx) => (
-                  <div key={idx} className="p-3 bg-gray-50 rounded-lg text-xs space-y-1.5">
-                    <div className="flex items-center justify-between font-semibold text-gray-800">
+                  <div key={idx} className="p-3 bg-gray-50 dark:bg-slate-800/60 rounded-lg text-xs space-y-1.5">
+                    <div className="flex items-center justify-between font-semibold text-gray-800 dark:text-slate-200">
                       <span>{proj.title || `Project #${idx + 1}`}</span>
                       <div className="flex gap-2 text-[11px]">
                         {proj.github && (
@@ -550,7 +535,7 @@ export default function ReviewPage() {
                             href={proj.github}
                             target="_blank"
                             rel="noreferrer"
-                            className="text-blue-600 hover:underline"
+                            className="text-blue-600 dark:text-blue-400 hover:underline"
                           >
                             GitHub ↗
                           </a>
@@ -560,7 +545,7 @@ export default function ReviewPage() {
                             href={proj.live}
                             target="_blank"
                             rel="noreferrer"
-                            className="text-green-600 hover:underline"
+                            className="text-green-600 dark:text-green-400 hover:underline"
                           >
                             Live Demo ↗
                           </a>
@@ -572,7 +557,7 @@ export default function ReviewPage() {
                         {proj.technologies.map((t, tIdx) => (
                           <span
                             key={tIdx}
-                            className="bg-blue-100 text-blue-800 text-[10px] font-semibold px-2 py-0.5 rounded"
+                            className="bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-300 text-[10px] font-semibold px-2 py-0.5 rounded"
                           >
                             {t}
                           </span>
@@ -580,7 +565,7 @@ export default function ReviewPage() {
                       </div>
                     )}
                     {proj.description && (
-                      <p className="text-gray-600 text-[11px] whitespace-pre-line">
+                      <p className="text-gray-600 dark:text-slate-300 text-[11px] whitespace-pre-line">
                         {proj.description}
                       </p>
                     )}
@@ -590,15 +575,14 @@ export default function ReviewPage() {
             )}
           </div>
 
-          {/* 5. Skills */}
-          <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-xs space-y-3">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-2.5">
-              <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+          <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs space-y-3">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-800 pb-2.5">
+              <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
                 <span>⚡</span> Technical Skills ({draft.skills?.length || 0})
               </h4>
               <Link
                 href="/details/skills"
-                className="text-xs text-blue-600 hover:text-blue-800 font-medium px-2 py-1 rounded hover:bg-blue-50 transition"
+                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-slate-800 transition"
               >
                 ✏ Edit
               </Link>
@@ -610,7 +594,7 @@ export default function ReviewPage() {
                 {draft.skills.map((skill, idx) => (
                   <span
                     key={idx}
-                    className="bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs px-2.5 py-1 rounded-md font-medium"
+                    className="bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-800 dark:text-slate-200 text-xs px-2.5 py-1 rounded-md font-medium"
                   >
                     {skill}
                   </span>
@@ -619,15 +603,14 @@ export default function ReviewPage() {
             )}
           </div>
 
-          {/* 6. Coding Profiles */}
-          <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-xs space-y-3">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-2.5">
-              <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+          <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs space-y-3">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-800 pb-2.5">
+              <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
                 <span>💻</span> Coding Profiles ({draft.codingProfiles?.length || 0})
               </h4>
               <Link
                 href="/details/coding-profiles"
-                className="text-xs text-blue-600 hover:text-blue-800 font-medium px-2 py-1 rounded hover:bg-blue-50 transition"
+                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-slate-800 transition"
               >
                 ✏ Edit
               </Link>
@@ -639,14 +622,14 @@ export default function ReviewPage() {
                 {draft.codingProfiles.map((cp, idx) => (
                   <div
                     key={idx}
-                    className="p-2.5 bg-gray-50 rounded-lg text-xs flex items-center justify-between"
+                    className="p-2.5 bg-gray-50 dark:bg-slate-800/60 rounded-lg text-xs flex items-center justify-between"
                   >
-                    <span className="font-semibold text-gray-800">{cp.platform}</span>
+                    <span className="font-semibold text-gray-800 dark:text-slate-200">{cp.platform}</span>
                     <a
                       href={cp.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-blue-600 hover:underline text-[11px]"
+                      className="text-blue-600 dark:text-blue-400 hover:underline text-[11px]"
                     >
                       @{cp.username || "profile"} ↗
                     </a>
@@ -656,15 +639,14 @@ export default function ReviewPage() {
             )}
           </div>
 
-          {/* 7. Achievements */}
-          <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-xs space-y-3">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-2.5">
-              <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+          <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs space-y-3">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-800 pb-2.5">
+              <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
                 <span>🏆</span> Achievements &amp; Honors ({draft.achievements?.length || 0})
               </h4>
               <Link
                 href="/details/achievements"
-                className="text-xs text-blue-600 hover:text-blue-800 font-medium px-2 py-1 rounded hover:bg-blue-50 transition"
+                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-slate-800 transition"
               >
                 ✏ Edit
               </Link>
@@ -674,13 +656,13 @@ export default function ReviewPage() {
             ) : (
               <div className="space-y-2">
                 {draft.achievements.map((ach, idx) => (
-                  <div key={idx} className="p-3 bg-gray-50 rounded-lg text-xs space-y-1">
-                    <div className="flex items-center justify-between font-semibold text-gray-800">
+                  <div key={idx} className="p-3 bg-gray-50 dark:bg-slate-800/60 rounded-lg text-xs space-y-1">
+                    <div className="flex items-center justify-between font-semibold text-gray-800 dark:text-slate-200">
                       <span>{ach.title}</span>
                       {ach.date && <span className="text-gray-400 text-[11px]">{ach.date}</span>}
                     </div>
                     {ach.description && (
-                      <p className="text-gray-600 text-[11px]">{ach.description}</p>
+                      <p className="text-gray-600 dark:text-slate-300 text-[11px]">{ach.description}</p>
                     )}
                   </div>
                 ))}
@@ -688,12 +670,11 @@ export default function ReviewPage() {
             )}
           </div>
 
-          {/* Navigation Bottom Footer */}
           <div className="flex items-center justify-between pt-4">
             <button
               type="button"
               onClick={() => router.push("/details/achievements")}
-              className="text-sm text-gray-500 hover:text-gray-700 font-medium px-3 py-2.5"
+              className="text-sm text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 font-medium px-3 py-2.5"
             >
               ← Back to Achievements
             </button>

@@ -70,38 +70,37 @@ export default function ProjectsPage() {
 
   return (
     <div className="w-full max-w-xl my-20 mr-50">
-      <h2 className="text-2xl font-bold text-gray-900 mb-1">Projects</h2>
-      <p className="text-sm text-gray-500 mb-4">
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-1">Projects</h2>
+      <p className="text-sm text-gray-500 dark:text-slate-400 mb-4">
         Highlight your best personal, open-source, or academic projects.
       </p>
 
-      {/* Smart Page Density Suggestion */}
-      <div className="mb-6 rounded-2xl border border-blue-200 bg-gradient-to-r from-blue-50/90 via-indigo-50/60 to-blue-50/90 p-4 shadow-xs flex items-start gap-3">
+      <div className="mb-6 rounded-2xl border border-blue-200 dark:border-blue-900/60 bg-gradient-to-r from-blue-50/90 via-indigo-50/60 to-blue-50/90 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 p-4 shadow-xs flex items-start gap-3">
         <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-blue-600 text-white font-bold text-xs shrink-0 mt-0.5">
           💡
         </div>
-        <div className="text-xs leading-relaxed text-slate-700">
-          <p className="font-semibold text-slate-900 mb-0.5">
+        <div className="text-xs leading-relaxed text-slate-700 dark:text-slate-300">
+          <p className="font-semibold text-slate-900 dark:text-slate-100 mb-0.5">
             Smart 1-Page Layout Tip
           </p>
           {experienceCount === 0 && (
             <span>
-              With <strong className="text-blue-700 font-semibold">0 work experience</strong>, we recommend adding <strong className="text-blue-700 font-semibold">3–4 detailed projects</strong> with numbers &amp; measurable impact (scale, % speedup, users) to fill your 1-page resume completely. (Currently: <span className={projectCount >= 3 ? "text-emerald-700 font-bold" : "text-amber-600 font-bold"}>{projectCount}/3–4 added</span>)
+              With <strong className="text-blue-700 dark:text-blue-400 font-semibold">0 work experience</strong>, we recommend adding <strong className="text-blue-700 dark:text-blue-400 font-semibold">3–4 detailed projects</strong> with numbers &amp; measurable impact (scale, % speedup, users) to fill your 1-page resume completely. (Currently: <span className={projectCount >= 3 ? "text-emerald-700 dark:text-emerald-400 font-bold" : "text-amber-600 dark:text-amber-400 font-bold"}>{projectCount}/3–4 added</span>)
             </span>
           )}
           {experienceCount === 1 && (
             <span>
-              With <strong className="text-blue-700 font-semibold">1 work experience</strong>, put <strong className="text-blue-700 font-semibold">at least 3 detailed projects</strong> with numbers &amp; impact to fill the 1-page layout nicely. (Currently: <span className={projectCount >= 3 ? "text-emerald-700 font-bold" : "text-amber-600 font-bold"}>{projectCount}/3 added</span>)
+              With <strong className="text-blue-700 dark:text-blue-400 font-semibold">1 work experience</strong>, put <strong className="text-blue-700 dark:text-blue-400 font-semibold">at least 3 detailed projects</strong> with numbers &amp; impact to fill the 1-page layout nicely. (Currently: <span className={projectCount >= 3 ? "text-emerald-700 dark:text-emerald-400 font-bold" : "text-amber-600 dark:text-amber-400 font-bold"}>{projectCount}/3 added</span>)
             </span>
           )}
           {experienceCount === 2 && (
             <span>
-              With <strong className="text-blue-700 font-semibold">2 work experiences</strong>, adding <strong className="text-blue-700 font-semibold">2 projects</strong> with strong numbers &amp; impact provides the perfect 1-page balance. (Currently: <span className={projectCount >= 2 ? "text-emerald-700 font-bold" : "text-amber-600 font-bold"}>{projectCount}/2 added</span>)
+              With <strong className="text-blue-700 dark:text-blue-400 font-semibold">2 work experiences</strong>, adding <strong className="text-blue-700 dark:text-blue-400 font-semibold">2 projects</strong> with strong numbers &amp; impact provides the perfect 1-page balance. (Currently: <span className={projectCount >= 2 ? "text-emerald-700 dark:text-emerald-400 font-bold" : "text-amber-600 dark:text-amber-400 font-bold"}>{projectCount}/2 added</span>)
             </span>
           )}
           {experienceCount >= 3 && (
             <span>
-              With <strong className="text-blue-700 font-semibold">{experienceCount} work experiences</strong>, include <strong className="text-blue-700 font-semibold">1–2 projects</strong> to ensure everything fits cleanly on 1 page without spilling over. (Currently: <span className={projectCount >= 1 ? "text-emerald-700 font-bold" : "text-amber-600 font-bold"}>{projectCount}/2 added</span>)
+              With <strong className="text-blue-700 dark:text-blue-400 font-semibold">{experienceCount} work experiences</strong>, include <strong className="text-blue-700 dark:text-blue-400 font-semibold">1–2 projects</strong> to ensure everything fits cleanly on 1 page without spilling over. (Currently: <span className={projectCount >= 1 ? "text-emerald-700 dark:text-emerald-400 font-bold" : "text-amber-600 dark:text-amber-400 font-bold"}>{projectCount}/2 added</span>)
             </span>
           )}
         </div>
@@ -115,17 +114,17 @@ export default function ProjectsPage() {
         className="space-y-6"
       >
         {projectsList.length === 0 && (
-          <div className="rounded-xl border border-dashed border-gray-300 bg-white p-8 text-center">
-            <p className="text-sm text-gray-600 font-medium mb-1">
+          <div className="rounded-xl border border-dashed border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 p-8 text-center">
+            <p className="text-sm text-gray-600 dark:text-slate-300 font-medium mb-1">
               No projects added yet
             </p>
-            <p className="text-xs text-gray-400 mb-4">
+            <p className="text-xs text-gray-400 dark:text-slate-500 mb-4">
               Add projects to showcase your technical skills and building capability.
             </p>
             <button
               type="button"
               onClick={handleAddProject}
-              className="bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs font-semibold px-4 py-2 rounded-lg transition"
+              className="bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-xs font-semibold px-4 py-2 rounded-lg transition"
             >
               + Add Project
             </button>
@@ -135,14 +134,14 @@ export default function ProjectsPage() {
         {projectsList.map((item, index) => (
           <div
             key={index}
-            className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm space-y-4 relative"
+            className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs space-y-4 relative"
           >
-            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-800 pb-3">
               <div className="flex items-center gap-2">
-                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-bold">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 text-xs font-bold">
                   {index + 1}
                 </span>
-                <h3 className="text-sm font-semibold text-gray-800">
+                <h3 className="text-sm font-semibold text-gray-800 dark:text-slate-200">
                   {item.title || `Project #${index + 1}`}
                 </h3>
               </div>
@@ -150,14 +149,14 @@ export default function ProjectsPage() {
               <button
                 type="button"
                 onClick={() => handleRemoveProject(index)}
-                className="text-xs text-red-500 hover:text-red-700 font-medium px-2 py-1 rounded hover:bg-red-50 transition"
+                className="text-xs text-red-500 hover:text-red-700 font-medium px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-950/40 transition"
               >
                 ✕ Remove
               </button>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1">
+              <label className="block text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1">
                 Project Title *
               </label>
               <input
@@ -168,12 +167,12 @@ export default function ProjectsPage() {
                 onChange={(e) =>
                   handleFieldChange(index, "title", e.target.value)
                 }
-                className="w-full rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
+                className="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1">
+              <label className="block text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1">
                 Technologies Used (comma separated or enter)
               </label>
               <div className="flex gap-2">
@@ -193,12 +192,12 @@ export default function ProjectsPage() {
                       handleAddTech(index);
                     }
                   }}
-                  className="w-full rounded-lg border border-gray-200 bg-white px-3.5 py-2 text-sm outline-none focus:border-blue-500"
+                  className="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-3.5 py-2 text-sm outline-none focus:border-blue-500"
                 />
                 <button
                   type="button"
                   onClick={() => handleAddTech(index)}
-                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium px-3 py-2 rounded-lg transition shrink-0"
+                  className="bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-700 dark:text-slate-300 text-xs font-medium px-3 py-2 rounded-lg transition shrink-0"
                 >
                   Add
                 </button>
@@ -209,7 +208,7 @@ export default function ProjectsPage() {
                   {item.technologies.map((tech, tIdx) => (
                     <span
                       key={tIdx}
-                      className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 text-xs px-2.5 py-1 rounded-md font-medium"
+                      className="inline-flex items-center gap-1 bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 text-xs px-2.5 py-1 rounded-md font-medium border border-blue-100 dark:border-blue-900/40"
                     >
                       {tech}
                       <button
@@ -226,7 +225,7 @@ export default function ProjectsPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1">
+              <label className="block text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1">
                 Description / Bullets *
               </label>
               <textarea
@@ -237,16 +236,16 @@ export default function ProjectsPage() {
                 onChange={(e) =>
                   handleFieldChange(index, "description", e.target.value)
                 }
-                className="w-full rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 resize-y"
+                className="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 resize-y"
               />
-              <p className="text-[11px] text-gray-400 mt-1">
+              <p className="text-[11px] text-gray-400 dark:text-slate-500 mt-1">
                 💡 Include quantified impact, numbers, and scale (e.g., 10k+ users, 40% speedup, 95% test coverage). Our AI will format these into high-impact LaTeX bullet points.
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-1">
+                <label className="block text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1">
                   GitHub URL
                 </label>
                 <input
@@ -256,12 +255,12 @@ export default function ProjectsPage() {
                   onChange={(e) =>
                     handleFieldChange(index, "github", e.target.value)
                   }
-                  className="w-full rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
+                  className="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-1">
+                <label className="block text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1">
                   Live Demo URL
                 </label>
                 <input
@@ -271,7 +270,7 @@ export default function ProjectsPage() {
                   onChange={(e) =>
                     handleFieldChange(index, "live", e.target.value)
                   }
-                  className="w-full rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
+                  className="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
                 />
               </div>
             </div>
@@ -282,7 +281,7 @@ export default function ProjectsPage() {
           <button
             type="button"
             onClick={handleAddProject}
-            className="w-full py-3 border-2 border-dashed border-gray-300 hover:border-blue-500 hover:bg-blue-50/50 text-gray-600 hover:text-blue-600 text-sm font-medium rounded-xl transition flex items-center justify-center gap-2"
+            className="w-full py-3 border-2 border-dashed border-gray-300 dark:border-slate-700 hover:border-blue-500 dark:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 text-gray-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm font-medium rounded-xl transition flex items-center justify-center gap-2"
           >
             <span>+</span> Add Another Project
           </button>
@@ -292,7 +291,7 @@ export default function ProjectsPage() {
           <button
             type="button"
             onClick={() => router.push("/details/experience")}
-            className="text-sm text-gray-500 hover:text-gray-700 font-medium px-3 py-2.5"
+            className="text-sm text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 font-medium px-3 py-2.5"
           >
             ← Back
           </button>
@@ -301,7 +300,7 @@ export default function ProjectsPage() {
             <button
               type="button"
               onClick={() => router.push("/details/skills")}
-              className="text-sm text-gray-500 hover:text-gray-700 px-3 py-2.5"
+              className="text-sm text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 px-3 py-2.5"
             >
               Skip
             </button>

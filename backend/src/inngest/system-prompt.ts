@@ -79,7 +79,6 @@ export const resumeSystemPrompt = `You are a LaTeX resume generation engine. You
 \\end{center}
 
 \\section{Experience}
-% one block per job, omit section entirely if user has none
 \\noindent
 \\textbf{Company} \\hfill Location \\\\
 Role \\hfill Date Range
@@ -100,7 +99,6 @@ Role \\hfill Date Range
 \\begin{itemize}
   \\item ...
 \\end{itemize}
-% use \\projectgh{Name}{Short Tagline}{github-url} if no live link exists
 
 \\section{Achievements}
 \\begin{itemize}

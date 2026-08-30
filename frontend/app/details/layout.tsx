@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { ResumeProvider } from "./reducer";
 import { ResumeDraftProvider } from "./resume-draft";
+import { ThemeToggle } from "../theme-toggle";
 
 const steps = [
   { label: "Personal", href: "/details/personal-details", icon: "👤" },
@@ -27,9 +28,8 @@ export default function DetailsLayout({
   return (
     <ResumeProvider>
       <ResumeDraftProvider>
-        <div className="grid min-h-screen lg:grid-cols-[260px_1fr]">
-          {/* Sidebar */}
-          <aside className="border-r border-gray-200 bg-white flex flex-col px-5 py-7 max-lg:flex-row max-lg:items-center max-lg:gap-4 max-lg:border-b max-lg:border-r-0 max-lg:py-4 max-lg:overflow-x-auto">
+        <div className="grid min-h-screen lg:grid-cols-[260px_1fr] bg-gray-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200">
+          <aside className="border-r border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col px-5 py-7 max-lg:flex-row max-lg:items-center max-lg:gap-4 max-lg:border-b max-lg:border-r-0 max-lg:py-4 max-lg:overflow-x-auto">
             <div className="flex items-center justify-between gap-3 w-full shrink-0">
               <Link
                 href="/"
@@ -37,15 +37,18 @@ export default function DetailsLayout({
               >
                 resumio<span>.</span>
               </Link>
-              <Link
-                href="/"
-                className="inline-flex items-center gap-1 text-xs font-medium text-slate-600 hover:text-blue-600 transition-colors bg-slate-100 hover:bg-blue-50 px-2.5 py-1 rounded-full"
-              >
-                ← Home
-              </Link>
+              <div className="flex items-center gap-2">
+                <ThemeToggle />
+                <Link
+                  href="/"
+                  className="inline-flex items-center gap-1 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700 px-2.5 py-1 rounded-full"
+                >
+                  ← Home
+                </Link>
+              </div>
             </div>
 
-            <p className="text-[11px] text-gray-400 uppercase tracking-widest mt-6 mb-5 max-lg:hidden">
+            <p className="text-[11px] text-gray-400 dark:text-slate-500 uppercase tracking-widest mt-6 mb-5 max-lg:hidden">
               Build your resume
             </p>
 
@@ -61,10 +64,10 @@ export default function DetailsLayout({
                       flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] no-underline transition-all
                       max-lg:flex-col max-lg:gap-1 max-lg:text-[10px] max-lg:min-w-[56px] max-lg:text-center max-lg:px-2 max-lg:py-1.5
                       ${isActive
-                        ? "bg-blue-50 text-blue-700 font-semibold"
+                        ? "bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 font-semibold"
                         : isDone
-                          ? "text-gray-500 hover:bg-gray-50"
-                          : "text-gray-400 hover:bg-gray-50 hover:text-gray-600"
+                          ? "text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800/60"
+                          : "text-gray-400 dark:text-slate-500 hover:bg-gray-50 dark:hover:bg-slate-800/60 hover:text-gray-600 dark:hover:text-slate-300"
                       }
                     `}
                   >
@@ -72,15 +75,15 @@ export default function DetailsLayout({
                       className={`
                         flex items-center justify-center w-8 h-8 rounded-lg text-sm shrink-0
                         ${isActive
-                          ? "bg-blue-100"
+                          ? "bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300"
                           : isDone
-                            ? "bg-green-50"
-                            : "bg-gray-100"
+                            ? "bg-green-50 dark:bg-green-950/60 text-green-600 dark:text-green-400"
+                            : "bg-gray-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400"
                         }
                       `}
                     >
                       {isDone ? (
-                        <span className="text-green-600 text-xs font-bold">✓</span>
+                        <span className="text-green-600 dark:text-green-400 text-xs font-bold">✓</span>
                       ) : (
                         step.icon
                       )}
@@ -91,21 +94,19 @@ export default function DetailsLayout({
               })}
             </nav>
 
-            {/* Request section / Feature */}
-            <div className="pt-4 mt-auto border-t border-gray-100 max-lg:hidden">
+            <div className="pt-4 mt-auto border-t border-gray-100 dark:border-slate-800 max-lg:hidden">
               <a
                 href="https://mail.google.com/mail/?view=cm&fs=1&to=amrit.createch@gmail.com&su=%5BResumio%20Resume%20Section%20Request%5D&body=Hi%20Amrit,%0A%0AI%20would%20like%20to%20request%20the%20following%20resume%20section%20(e.g.%20Publications,%20Volunteering,%20Coursework,%20Leadership):%0A%0A"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-800 font-medium py-1 px-1 rounded transition"
+                className="inline-flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium py-1 px-1 rounded transition"
               >
                 <span>➕</span> Request a New Section
               </a>
             </div>
 
-            {/* Progress footer */}
             <div className="pt-3 flex items-center gap-3 max-lg:border-t-0 max-lg:pt-0 max-lg:mt-0 max-lg:ml-4">
-              <div className="w-full bg-gray-100 rounded-full h-1.5 max-w-[120px] max-lg:w-16">
+              <div className="w-full bg-gray-100 dark:bg-slate-800 rounded-full h-1.5 max-w-[120px] max-lg:w-16">
                 <div
                   className="bg-blue-600 h-1.5 rounded-full transition-all duration-500"
                   style={{
@@ -113,18 +114,17 @@ export default function DetailsLayout({
                   }}
                 />
               </div>
-              <span className="text-[11px] text-gray-400 whitespace-nowrap">
+              <span className="text-[11px] text-gray-400 dark:text-slate-500 whitespace-nowrap">
                 {currentIndex + 1}/{steps.length}
               </span>
             </div>
           </aside>
 
-          {/* Main */}
-          <main className="bg-gray-50/50 flex flex-col items-center p-8 max-sm:p-5 overflow-y-auto">
+          <main className="bg-gray-50/50 dark:bg-slate-950/80 flex flex-col items-center p-8 max-sm:p-5 overflow-y-auto">
             <div className="w-full max-w-4xl mb-4 flex items-center justify-start">
               <Link
                 href="/"
-                className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 hover:text-blue-600 transition-colors bg-white border border-slate-200 shadow-sm hover:bg-slate-50 px-3 py-1.5 rounded-full"
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800 px-3 py-1.5 rounded-full"
               >
                 ← Back to Home
               </Link>
