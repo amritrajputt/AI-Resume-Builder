@@ -14,7 +14,21 @@ app.use(cors({
   credentials: true,
 }));
 
-app.use('/api/inngest', serve({ client: inngest, functions }));
+// Inngest diagnostic logging middleware
+app.use('/api/inngest', (req, _res, next) => {
+  const hasSignature = Boolean(req.headers['x-inngest-signature']);
+  const userAgent = req.headers['user-agent'] ?? 'unknown';
+  console.log(`[Inngest Route] ${req.method} ${req.originalUrl} | IP: ${req.ip} | User-Agent: ${userAgent} | Has Signature: ${hasSignature}`);
+  next();
+});
+
+app.use(
+  '/api/inngest',
+  serve({
+    client: inngest,
+    functions,
+  })
+);
 
 app.use(express.json());
 app.use(clerkMiddleware());
