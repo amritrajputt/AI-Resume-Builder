@@ -42,7 +42,7 @@ export class TexSandboxService {
                 "-w", "/workspace",
                 "--cap-drop", "ALL",
                 "--security-opt", "no-new-privileges",
-                "texlive/texlive:latest",
+                "blang/latex:ubuntu",
                 "pdflatex",
                 "-interaction=nonstopmode",
                 "-halt-on-error",
