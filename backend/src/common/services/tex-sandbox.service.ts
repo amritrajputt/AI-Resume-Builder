@@ -30,6 +30,10 @@ export class TexSandboxService {
 
         await fs.writeFile(texPath, texFile, "utf8");
 
+        // mkdtemp creates dirs with 0700 — Docker with --cap-drop ALL can't read them
+        await fs.chmod(workdir, 0o755);
+        await fs.chmod(texPath, 0o644);
+
         try {
             // Use -interaction=nonstopmode WITHOUT -halt-on-error
             // This allows pdflatex to continue past minor errors and still produce a PDF
