@@ -14,7 +14,11 @@ app.use(cors({
   origin: [process.env.FRONTEND_URL ?? 'http://localhost:3000', 'http://localhost:3000', 'http://localhost:3001'],
   credentials: true,
 }));
-app.use('/api/inngest', serve({ client: inngest, functions }));
+app.use('/api/inngest', serve({
+  client: inngest,
+  functions,
+  signingKey: process.env.INNGEST_SIGNING_KEY,
+}));
 app.use(clerkMiddleware());
 
 app.use('/auth', authRouter);
