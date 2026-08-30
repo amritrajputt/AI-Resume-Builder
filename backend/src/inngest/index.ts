@@ -91,7 +91,7 @@ export const compileResumeTex = inngest.createFunction(
     {
         id: "compile-resume-tex",
         triggers: { event: "resume/compile.requested" },
-        concurrency: { limit: 6 },
+        concurrency: { limit: 5 },
         retries: 1,
     },
     async ({ event, step }) => {
