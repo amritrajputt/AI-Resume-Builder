@@ -46,8 +46,6 @@ export class TexSandboxService {
                 "--pids-limit", "128",
                 "-v", `${mountPath}:/workspace:rw`,
                 "-w", "/workspace",
-                "--cap-drop", "ALL",
-                "--security-opt", "no-new-privileges",
                 "blang/latex:ubuntu",
                 "pdflatex",
                 "-interaction=nonstopmode",
