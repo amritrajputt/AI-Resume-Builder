@@ -9,6 +9,8 @@ import { functions, inngest } from './src/inngest';
 import { errorHandler } from './src/common/middleware/error.middleware';
 
 const app = express();
+
+app.use(express.json());
 app.use(cors({
   origin: true,
   credentials: true,
@@ -30,12 +32,10 @@ app.use(
   })
 );
 
-app.use(express.json());
 app.use(clerkMiddleware());
 
 app.use('/auth', authRouter);
 app.use('/data', dataRouter);
-
 
 app.use(errorHandler);
 
