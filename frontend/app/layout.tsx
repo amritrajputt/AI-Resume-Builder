@@ -27,8 +27,15 @@ const blackOpsOne = Black_Ops_One({
 });
 
 export const metadata: Metadata = {
-  title: "Resumio",
-  description: "get your dream job",
+  title: "Resumio - AI LaTeX Resume Builder",
+  description: "Create ATS-friendly, single-page LaTeX resumes in seconds with AI.",
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
