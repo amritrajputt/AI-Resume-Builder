@@ -42,10 +42,26 @@ export class DataService {
 
         const targetResume = resumeList[0];
 
+        const cleanData = {
+            personalInfo: {
+                name: targetResume.name,
+                email: targetResume.email || null,
+                phone: targetResume.phone || null,
+                linkedin: targetResume.linkedin || null,
+                github: targetResume.github || null,
+                portfolio: targetResume.portfolio || null,
+            },
+            codingProfiles: targetResume.codingProfiles || [],
+            skills: targetResume.skills || [],
+            education: targetResume.education || [],
+            experience: targetResume.experience || [],
+            projects: targetResume.projects || [],
+            certifications: targetResume.certifications || [],
+            achievements: targetResume.achievements || [],
+        };
+
         return [
-            Object.entries(targetResume)
-                .map(([key, value]) => `${key}: ${JSON.stringify(value)}`)
-                .join("\n")
+            JSON.stringify(cleanData, null, 2)
         ];
     }
 
