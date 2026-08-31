@@ -70,13 +70,13 @@ export default function Home() {
 
       <section className="hero" id="top">
         <div className="hero-copy">
-          <h1 className="max-w-[560px] text-[clamp(4rem,5vw,7rem)] leading-[0.8] tracking-[-0.07em] text-slate-900 dark:text-slate-100">
+          <h1 className="max-w-[560px] text-[clamp(4rem,5vw,7rem)] leading-[0.8] tracking-[-0.07em] text-neutral-900 dark:text-white">
             Stop struggling<br />with resumes.<br />
             <span>Let AI do the</span><br />
             <span>hard part.</span>
           </h1>
 
-          <p className="mb-7 max-w-[540px] text-[1.1rem] leading-8 text-slate-600 dark:text-slate-400">
+          <p className="mb-7 max-w-[540px] text-[1.1rem] leading-8 text-neutral-600 dark:text-neutral-400">
             From wording to formatting, our AI resume builder helps you create a polished resume that stands out in seconds.
           </p>
 
@@ -86,19 +86,19 @@ export default function Home() {
             </button>
           </div>
 
-          <div className="proof-row mt-8 flex items-center gap-4 text-sm text-slate-600 dark:text-slate-400">
+          <div className="proof-row mt-8 flex items-center gap-4 text-sm text-neutral-600 dark:text-neutral-400">
             <div className="avatars flex -space-x-2">
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#d88e5f] text-[10px] font-bold text-white">R</span>
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#7d9bc0] text-[10px] font-bold text-white">J</span>
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#d6d7d2] text-[10px] font-bold text-slate-700">A</span>
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#d6d7d2] text-[10px] font-bold text-neutral-700">A</span>
             </div>
             <span>
-              <strong className="font-semibold text-slate-800 dark:text-slate-200">Made for job seekers</strong> who want to stand out
+              <strong className="font-semibold text-neutral-800 dark:text-neutral-200">Made for job seekers</strong> who want to stand out
             </span>
-            <i className="h-6 w-px bg-slate-200 dark:bg-slate-700" />
+            <i className="h-6 w-px bg-neutral-200 dark:bg-neutral-800" />
             <span className="flex items-center gap-2">
               <span className="text-blue-600 dark:text-blue-400">✦</span>
-              <strong className="font-semibold text-slate-800 dark:text-slate-200">Thoughtfully designed</strong>
+              <strong className="font-semibold text-neutral-800 dark:text-neutral-200">Thoughtfully designed</strong>
             </span>
           </div>
         </div>
@@ -127,7 +127,7 @@ export default function Home() {
       <section id="how-it-works" className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8">
         <div className="mb-10 text-center">
           <p className="text-sm font-semibold uppercase tracking-[0.22em] text-blue-600 dark:text-blue-400">How it works</p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl">Build your resume in 3 simple steps</h2>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight text-neutral-900 dark:text-white sm:text-4xl">Build your resume in 3 simple steps</h2>
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
@@ -148,38 +148,38 @@ export default function Home() {
               text: 'Let AI polish your language and export a resume ready to share.',
             },
           ].map((item) => (
-            <div key={item.step} className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
-              <div className="mb-4 inline-flex rounded-full bg-blue-50 dark:bg-blue-950/60 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-800/40">
+            <div key={item.step} className="rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#0f0f0f] p-6 shadow-sm">
+              <div className="mb-4 inline-flex rounded-full bg-blue-50 dark:bg-neutral-900 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-blue-700 dark:text-blue-400 border border-blue-100 dark:border-neutral-800">
                 {item.step}
               </div>
-              <h3 className="mb-3 text-xl font-semibold text-slate-900 dark:text-slate-100">{item.title}</h3>
-              <p className="text-sm leading-6 text-slate-600 dark:text-slate-400">{item.text}</p>
+              <h3 className="mb-3 text-xl font-semibold text-neutral-900 dark:text-white">{item.title}</h3>
+              <p className="text-sm leading-6 text-neutral-600 dark:text-neutral-400">{item.text}</p>
             </div>
           ))}
         </div>
       </section>
 
       <section id="feature-request" className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="rounded-3xl border border-blue-100 dark:border-slate-800 bg-gradient-to-b from-blue-50/70 via-white to-indigo-50/40 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 p-8 sm:p-12 shadow-sm text-center">
-          <div className="inline-flex items-center gap-2 rounded-full bg-blue-100/80 dark:bg-blue-950/60 px-3.5 py-1 text-xs font-bold text-blue-800 dark:text-blue-300 uppercase tracking-wider mb-4 border border-blue-200 dark:border-blue-800/40">
+        <div className="rounded-3xl border border-blue-100 dark:border-neutral-800 bg-gradient-to-b from-blue-50/70 via-white to-neutral-50 dark:from-[#0f0f0f] dark:via-[#0a0a0a] dark:to-black p-8 sm:p-12 shadow-sm text-center">
+          <div className="inline-flex items-center gap-2 rounded-full bg-blue-100/80 dark:bg-neutral-900 px-3.5 py-1 text-xs font-bold text-blue-800 dark:text-blue-400 uppercase tracking-wider mb-4 border border-blue-200 dark:border-neutral-800">
             <span>💡</span> Feature Request &amp; Bug Report
           </div>
-          <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl">
+          <h2 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white sm:text-4xl">
             Request a Feature or Report a Bug
           </h2>
-          <p className="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
+          <p className="mt-3 text-sm sm:text-base text-neutral-600 dark:text-neutral-400 max-w-xl mx-auto">
             Found an issue, need a specific LaTeX template, or have an idea to improve Resumio? Send me an email directly.
           </p>
 
           <form onSubmit={handleSendFeatureRequest} className="mt-8 max-w-lg mx-auto space-y-4 text-left">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
                 Type
               </label>
               <select
                 value={featureCategory}
                 onChange={(e) => setFeatureCategory(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2.5 text-sm text-slate-800 dark:text-slate-200 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="w-full rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#141414] px-3.5 py-2.5 text-sm text-neutral-800 dark:text-neutral-200 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               >
                 <option value="Resume Section Request">📄 Resume Section Request (e.g. Publications, Volunteer, Custom)</option>
                 <option value="Feature Request">✨ Feature Request</option>
@@ -188,7 +188,7 @@ export default function Home() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
                 Your Email (Optional, for a response)
               </label>
               <input
@@ -196,12 +196,12 @@ export default function Home() {
                 placeholder="your.email@example.com"
                 value={userEmail}
                 onChange={(e) => setUserEmail(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2.5 text-sm text-slate-800 dark:text-slate-200 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="w-full rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#141414] px-3.5 py-2.5 text-sm text-neutral-800 dark:text-neutral-200 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
                 Description *
               </label>
               <textarea
@@ -216,7 +216,7 @@ export default function Home() {
                 }
                 value={featureDescription}
                 onChange={(e) => setFeatureDescription(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2.5 text-sm text-slate-800 dark:text-slate-200 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-y"
+                className="w-full rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#141414] px-3.5 py-2.5 text-sm text-neutral-800 dark:text-neutral-200 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-y"
               />
             </div>
 
@@ -228,8 +228,8 @@ export default function Home() {
                 <span>✉️</span> Send via Gmail
               </button>
 
-              <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
-                <span>Or mail directly: <strong className="text-slate-800 dark:text-slate-200 font-mono">amrit.createch@gmail.com</strong></span>
+              <div className="flex items-center justify-between pt-2 border-t border-neutral-100 dark:border-neutral-800 text-xs text-neutral-500 dark:text-neutral-400">
+                <span>Or mail directly: <strong className="text-neutral-800 dark:text-neutral-200 font-mono">amrit.createch@gmail.com</strong></span>
                 <button
                   type="button"
                   onClick={handleCopyEmail}
@@ -255,11 +255,11 @@ export default function Home() {
         <span>Fast, clear, and made to get noticed.</span>
       </section>
 
-      <div className="pb-8 text-center text-sm font-medium text-slate-500 dark:text-slate-400 flex flex-col items-center gap-2">
+      <div className="pb-8 text-center text-sm font-medium text-neutral-500 dark:text-neutral-400 flex flex-col items-center gap-2">
         <div>
-          Made with love by <span className="font-semibold text-slate-700 dark:text-slate-300">Amrit</span>
+          Made with love by <span className="font-semibold text-neutral-700 dark:text-neutral-300">Amrit</span>
         </div>
-        <div className="text-xs text-slate-400 dark:text-slate-500">
+        <div className="text-xs text-neutral-400 dark:text-neutral-500">
           Got ideas or questions?{" "}
           <a
             href="mailto:amrit.createch@gmail.com?subject=Resumio%20Feedback"

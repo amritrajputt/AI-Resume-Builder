@@ -62,7 +62,7 @@ export default function ReviewPage() {
           } else if (job.status === "failed") {
             setIsGenerating(false);
             clearInterval(interval);
-            setErrorMsg(job.errorMessage || "Resume generation or compilation failed");
+            setErrorMsg("Resume generation could not be completed. Please click Generate Resume to try again.");
           }
         }
       } catch (err) {
@@ -83,10 +83,10 @@ export default function ReviewPage() {
         const url = URL.createObjectURL(blob);
         setPdfUrl(url);
       } else {
-        throw new Error("Could not download compiled PDF file.");
+        throw new Error("Unable to download preview.");
       }
     } catch (err: unknown) {
-      if (err instanceof Error) setErrorMsg(err.message);
+      setErrorMsg("Unable to load the compiled preview. Please try generating again.");
     }
   };
 
@@ -99,8 +99,7 @@ export default function ReviewPage() {
     try {
       const res = await saveResume();
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.message || "Failed to save resume details to database.");
+        throw new Error("Failed to save resume details.");
       }
 
       const json = await res.json();
@@ -114,7 +113,7 @@ export default function ReviewPage() {
 
       const token = await getToken();
       if (!token) {
-        throw new Error("You must be logged in to generate your resume.");
+        throw new Error("Please sign in to generate your resume.");
       }
 
       const genRes = await fetch(`${backendUrl}/data/generate`, {
@@ -130,8 +129,7 @@ export default function ReviewPage() {
       });
 
       if (!genRes.ok) {
-        const genErr = await genRes.json().catch(() => ({}));
-        throw new Error(genErr.message || "Failed to start AI generation job.");
+        throw new Error("Unable to start AI generation job.");
       }
 
       const genJson = await genRes.json();
@@ -141,25 +139,21 @@ export default function ReviewPage() {
         setJobId(createdJobId);
         window.sessionStorage.setItem("resumio-saved-job-id", createdJobId);
       } else {
-        throw new Error("Generation job could not be initiated.");
+        throw new Error("Unable to initialize generation queue.");
       }
     } catch (err: unknown) {
       setIsGenerating(false);
-      if (err instanceof Error) {
-        setErrorMsg(err.message);
-      } else {
-        setErrorMsg("An unexpected error occurred while generating.");
-      }
+      setErrorMsg("Unable to process your resume right now. Please try again in a few moments.");
     }
   };
 
   return (
     <div className="w-full max-w-2xl my-16 mr-20 space-y-6">
-      <div className="border-b border-gray-200 dark:border-slate-800 pb-4">
+      <div className="border-b border-gray-200 dark:border-neutral-800 pb-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100">Review &amp; Generate Resume</h2>
-            <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Review &amp; Generate Resume</h2>
+            <p className="text-sm text-gray-500 dark:text-neutral-400 mt-1">
               Verify your information, then click Generate to produce your ATS-optimized PDF resume.
             </p>
           </div>
@@ -171,7 +165,7 @@ export default function ReviewPage() {
                 className={`text-xs px-3 py-1.5 rounded-lg font-medium transition ${
                   activeTab === "review"
                     ? "bg-blue-600 text-white"
-                    : "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700"
+                    : "bg-gray-100 dark:bg-neutral-900 text-gray-700 dark:text-neutral-300 hover:bg-gray-200 dark:hover:bg-neutral-800"
                 }`}
               >
                 Review Details
@@ -182,7 +176,7 @@ export default function ReviewPage() {
                 className={`text-xs px-3 py-1.5 rounded-lg font-medium transition ${
                   activeTab === "pdf"
                     ? "bg-green-600 text-white"
-                    : "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700"
+                    : "bg-gray-100 dark:bg-neutral-900 text-gray-700 dark:text-neutral-300 hover:bg-gray-200 dark:hover:bg-neutral-800"
                 }`}
               >
                 View PDF
@@ -193,7 +187,7 @@ export default function ReviewPage() {
       </div>
 
       {errorMsg && (
-        <div className="p-4 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm flex items-start justify-between">
+        <div className="p-4 rounded-xl bg-red-50 dark:bg-neutral-900 border border-red-200 dark:border-red-900/40 text-red-700 dark:text-red-300 text-sm flex items-start justify-between">
           <span>{errorMsg}</span>
           <button
             type="button"
@@ -235,8 +229,8 @@ export default function ReviewPage() {
         return (
           <div className={`p-3.5 rounded-xl border text-xs flex items-center justify-between ${
             isOptimal
-              ? "bg-emerald-50/80 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300"
-              : "bg-amber-50/90 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300"
+              ? "bg-emerald-50/80 dark:bg-neutral-900 border-emerald-200 dark:border-emerald-900/40 text-emerald-800 dark:text-emerald-300"
+              : "bg-amber-50/90 dark:bg-neutral-900 border-amber-200 dark:border-amber-900/40 text-amber-800 dark:text-amber-300"
           }`}>
             <div className="flex items-center gap-2.5">
               <span className="text-base">{isOptimal ? "✨" : "💡"}</span>
@@ -245,7 +239,7 @@ export default function ReviewPage() {
             {!isOptimal && (
               <Link
                 href="/details/projects"
-                className="font-semibold text-amber-900 dark:text-amber-200 underline hover:text-amber-700 whitespace-nowrap ml-2"
+                className="font-semibold text-amber-900 dark:text-amber-300 underline hover:text-amber-700 whitespace-nowrap ml-2"
               >
                 + Add Projects
               </Link>
@@ -254,12 +248,12 @@ export default function ReviewPage() {
         );
       })()}
 
-      <div className="rounded-2xl border-2 border-blue-200 dark:border-blue-900/60 bg-gradient-to-br from-blue-50/70 via-indigo-50/40 to-purple-50/50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 p-6 shadow-sm space-y-4">
+      <div className="rounded-2xl border-2 border-blue-200 dark:border-neutral-800 bg-gradient-to-br from-blue-50/70 via-indigo-50/40 to-neutral-50 dark:from-[#0f0f0f] dark:via-[#0a0a0a] dark:to-black p-6 shadow-sm space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div>
-              <h3 className="text-base font-bold text-gray-900 dark:text-slate-100">AI LaTeX Resume Engine</h3>
-              <p className="text-xs text-gray-500 dark:text-slate-400">
+              <h3 className="text-base font-bold text-gray-900 dark:text-white">AI LaTeX Resume Engine</h3>
+              <p className="text-xs text-gray-500 dark:text-neutral-400">
                 Powered by Inngest &amp; GPT-4o with sandboxed LaTeX compilation.
               </p>
             </div>
@@ -276,7 +270,7 @@ export default function ReviewPage() {
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1">
+          <label className="block text-xs font-semibold text-gray-700 dark:text-neutral-300 mb-1">
             Custom Prompt / Target Role (Optional)
           </label>
           <input
@@ -285,7 +279,7 @@ export default function ReviewPage() {
             onChange={(e) => setAiPrompt(e.target.value)}
             disabled={isGenerating}
             placeholder="e.g. Focus on Backend &amp; Distributed Systems, high-density bullet points..."
-            className="w-full rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2 text-xs text-gray-800 dark:text-slate-200 outline-none focus:border-blue-500 disabled:bg-gray-100 dark:disabled:bg-slate-900"
+            className="w-full rounded-lg border border-gray-300 dark:border-neutral-800 bg-white dark:bg-[#141414] px-3.5 py-2 text-xs text-gray-800 dark:text-neutral-200 outline-none focus:border-blue-500 disabled:bg-gray-100 dark:disabled:bg-neutral-900"
           />
         </div>
 
@@ -342,12 +336,12 @@ export default function ReviewPage() {
                     : "bg-blue-500 animate-ping"
                 }`}
               />
-              <span className="text-gray-700 dark:text-slate-300 capitalize">
+              <span className="text-gray-700 dark:text-neutral-300 capitalize">
                 {jobStatus === "queued" && "Queued in Inngest..."}
                 {jobStatus === "generating" && "AI Generating LaTeX code..."}
                 {jobStatus === "compiling" && "Sandboxed LaTeX Compilation..."}
                 {jobStatus === "completed" && "Resume Ready!"}
-                {jobStatus === "failed" && "Compilation Failed"}
+                {jobStatus === "failed" && "Generation paused"}
               </span>
             </div>
           )}
@@ -357,7 +351,7 @@ export default function ReviewPage() {
       {pdfUrl && activeTab === "pdf" && (
         <div ref={pdfRef} className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-slate-100">Compiled PDF Preview</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Compiled PDF Preview</h3>
             <div className="flex items-center gap-2">
               <a
                 href={pdfUrl}
@@ -368,14 +362,14 @@ export default function ReviewPage() {
               </a>
               <Link
                 href="/dashboard"
-                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-3 py-2 border border-blue-200 dark:border-slate-700 rounded-lg hover:bg-blue-50 dark:hover:bg-slate-800 transition"
+                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-3 py-2 border border-blue-200 dark:border-neutral-800 rounded-lg hover:bg-blue-50 dark:hover:bg-neutral-900 transition"
               >
                 Dashboard →
               </Link>
             </div>
           </div>
 
-          <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden shadow-md h-[780px]">
+          <div className="rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#0a0a0a] overflow-hidden shadow-md h-[780px]">
             <iframe
               src={pdfUrl}
               className="w-full h-full border-none"
@@ -387,79 +381,79 @@ export default function ReviewPage() {
 
       {activeTab === "review" && (
         <div className="space-y-4">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-gray-400 dark:text-slate-500">
+          <h3 className="text-sm font-bold uppercase tracking-wider text-gray-400 dark:text-neutral-500">
             Resume Summary Details
           </h3>
 
-          <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs space-y-3">
-            <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-800 pb-2.5">
-              <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
+          <div className="rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#0f0f0f] p-5 shadow-xs space-y-3">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-neutral-800 pb-2.5">
+              <h4 className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
                 <span>👤</span> Personal Information
               </h4>
               <Link
                 href="/details/personal-details"
-                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-slate-800 transition"
+                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-neutral-900 transition"
               >
                 ✏ Edit
               </Link>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-gray-600 dark:text-slate-400">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-gray-600 dark:text-neutral-400">
               <div>
-                <span className="font-semibold text-gray-800 dark:text-slate-200">Full Name:</span>{" "}
+                <span className="font-semibold text-gray-800 dark:text-neutral-200">Full Name:</span>{" "}
                 {draft.name || <span className="text-red-400 italic">Not set</span>}
               </div>
               <div>
-                <span className="font-semibold text-gray-800 dark:text-slate-200">Email:</span>{" "}
+                <span className="font-semibold text-gray-800 dark:text-neutral-200">Email:</span>{" "}
                 {draft.email || <span className="text-red-400 italic">Not set</span>}
               </div>
               <div>
-                <span className="font-semibold text-gray-800 dark:text-slate-200">Phone:</span>{" "}
-                {draft.phone || <span className="text-gray-400">None</span>}
+                <span className="font-semibold text-gray-800 dark:text-neutral-200">Phone:</span>{" "}
+                {draft.phone || <span className="text-gray-400 dark:text-neutral-600">None</span>}
               </div>
               <div>
-                <span className="font-semibold text-gray-800 dark:text-slate-200">LinkedIn:</span>{" "}
-                {draft.linkedin || <span className="text-gray-400">None</span>}
+                <span className="font-semibold text-gray-800 dark:text-neutral-200">LinkedIn:</span>{" "}
+                {draft.linkedin || <span className="text-gray-400 dark:text-neutral-600">None</span>}
               </div>
               <div>
-                <span className="font-semibold text-gray-800 dark:text-slate-200">GitHub:</span>{" "}
-                {draft.github || <span className="text-gray-400">None</span>}
+                <span className="font-semibold text-gray-800 dark:text-neutral-200">GitHub:</span>{" "}
+                {draft.github || <span className="text-gray-400 dark:text-neutral-600">None</span>}
               </div>
               <div>
-                <span className="font-semibold text-gray-800 dark:text-slate-200">Portfolio:</span>{" "}
-                {draft.portfolio || <span className="text-gray-400">None</span>}
+                <span className="font-semibold text-gray-800 dark:text-neutral-200">Portfolio:</span>{" "}
+                {draft.portfolio || <span className="text-gray-400 dark:text-neutral-600">None</span>}
               </div>
             </div>
           </div>
 
-          <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs space-y-3">
-            <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-800 pb-2.5">
-              <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
+          <div className="rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#0f0f0f] p-5 shadow-xs space-y-3">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-neutral-800 pb-2.5">
+              <h4 className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
                 <span>🎓</span> Education ({draft.education?.length || 0})
               </h4>
               <Link
                 href="/details/education"
-                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-slate-800 transition"
+                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-neutral-900 transition"
               >
                 ✏ Edit
               </Link>
             </div>
             {(!draft.education || draft.education.length === 0) ? (
-              <p className="text-xs text-gray-400 italic">No education items added.</p>
+              <p className="text-xs text-gray-400 dark:text-neutral-500 italic">No education items added.</p>
             ) : (
               <div className="space-y-2">
                 {draft.education.map((edu, idx) => (
                   <div
                     key={idx}
-                    className="p-3 bg-gray-50 dark:bg-slate-800/60 rounded-lg text-xs flex items-center justify-between"
+                    className="p-3 bg-gray-50 dark:bg-[#141414] rounded-lg text-xs flex items-center justify-between"
                   >
                     <div>
-                      <p className="font-semibold text-gray-800 dark:text-slate-200">
+                      <p className="font-semibold text-gray-800 dark:text-neutral-200">
                         {edu.degree} - {edu.institution || "Institution name"}
                       </p>
-                      <p className="text-gray-500 dark:text-slate-400">Graduation Year: {edu.year || "N/A"}</p>
+                      <p className="text-gray-500 dark:text-neutral-400">Graduation Year: {edu.year || "N/A"}</p>
                     </div>
                     {edu.cgpa && (
-                      <span className="bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-300 font-semibold px-2 py-0.5 rounded text-[11px]">
+                      <span className="bg-blue-100 dark:bg-neutral-800 text-blue-800 dark:text-blue-300 font-semibold px-2 py-0.5 rounded text-[11px]">
                         CGPA/Score: {edu.cgpa}
                       </span>
                     )}
@@ -469,33 +463,33 @@ export default function ReviewPage() {
             )}
           </div>
 
-          <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs space-y-3">
-            <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-800 pb-2.5">
-              <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
+          <div className="rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#0f0f0f] p-5 shadow-xs space-y-3">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-neutral-800 pb-2.5">
+              <h4 className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
                 <span>💼</span> Work Experience ({draft.experience?.length || 0})
               </h4>
               <Link
                 href="/details/experience"
-                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-slate-800 transition"
+                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-neutral-900 transition"
               >
                 ✏ Edit
               </Link>
             </div>
             {(!draft.experience || draft.experience.length === 0) ? (
-              <p className="text-xs text-gray-400 italic">No work experience added (optional).</p>
+              <p className="text-xs text-gray-400 dark:text-neutral-500 italic">No work experience added (optional).</p>
             ) : (
               <div className="space-y-3">
                 {draft.experience.map((exp, idx) => (
-                  <div key={idx} className="p-3 bg-gray-50 dark:bg-slate-800/60 rounded-lg text-xs space-y-1.5">
-                    <div className="flex items-center justify-between font-semibold text-gray-800 dark:text-slate-200">
+                  <div key={idx} className="p-3 bg-gray-50 dark:bg-[#141414] rounded-lg text-xs space-y-1.5">
+                    <div className="flex items-center justify-between font-semibold text-gray-800 dark:text-neutral-200">
                       <span>{exp.role || "Role"} at {exp.company || "Company"}</span>
-                      <span className="text-gray-500 dark:text-slate-400 text-[11px]">
+                      <span className="text-gray-500 dark:text-neutral-400 text-[11px]">
                         {exp.startDate} - {exp.currentlyWorking ? "Present" : exp.endDate || "N/A"}
                       </span>
                     </div>
-                    {exp.location && <p className="text-gray-400 text-[11px]">{exp.location}</p>}
+                    {exp.location && <p className="text-gray-400 dark:text-neutral-500 text-[11px]">{exp.location}</p>}
                     {exp.description && (
-                      <p className="text-gray-600 dark:text-slate-300 whitespace-pre-line text-[11px] pt-1">
+                      <p className="text-gray-600 dark:text-neutral-300 whitespace-pre-line text-[11px] pt-1">
                         {typeof exp.description === "string"
                           ? exp.description
                           : Array.isArray(exp.description)
@@ -509,25 +503,25 @@ export default function ReviewPage() {
             )}
           </div>
 
-          <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs space-y-3">
-            <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-800 pb-2.5">
-              <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
+          <div className="rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#0f0f0f] p-5 shadow-xs space-y-3">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-neutral-800 pb-2.5">
+              <h4 className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
                 <span>🚀</span> Projects ({draft.projects?.length || 0})
               </h4>
               <Link
                 href="/details/projects"
-                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-slate-800 transition"
+                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-neutral-900 transition"
               >
                 ✏ Edit
               </Link>
             </div>
             {(!draft.projects || draft.projects.length === 0) ? (
-              <p className="text-xs text-gray-400 italic">No projects added.</p>
+              <p className="text-xs text-gray-400 dark:text-neutral-500 italic">No projects added.</p>
             ) : (
               <div className="space-y-3">
                 {draft.projects.map((proj, idx) => (
-                  <div key={idx} className="p-3 bg-gray-50 dark:bg-slate-800/60 rounded-lg text-xs space-y-1.5">
-                    <div className="flex items-center justify-between font-semibold text-gray-800 dark:text-slate-200">
+                  <div key={idx} className="p-3 bg-gray-50 dark:bg-[#141414] rounded-lg text-xs space-y-1.5">
+                    <div className="flex items-center justify-between font-semibold text-gray-800 dark:text-neutral-200">
                       <span>{proj.title || `Project #${idx + 1}`}</span>
                       <div className="flex gap-2 text-[11px]">
                         {proj.github && (
@@ -557,7 +551,7 @@ export default function ReviewPage() {
                         {proj.technologies.map((t, tIdx) => (
                           <span
                             key={tIdx}
-                            className="bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-300 text-[10px] font-semibold px-2 py-0.5 rounded"
+                            className="bg-blue-100 dark:bg-neutral-800 text-blue-800 dark:text-blue-300 text-[10px] font-semibold px-2 py-0.5 rounded"
                           >
                             {t}
                           </span>
@@ -565,7 +559,7 @@ export default function ReviewPage() {
                       </div>
                     )}
                     {proj.description && (
-                      <p className="text-gray-600 dark:text-slate-300 text-[11px] whitespace-pre-line">
+                      <p className="text-gray-600 dark:text-neutral-300 text-[11px] whitespace-pre-line">
                         {proj.description}
                       </p>
                     )}
@@ -575,26 +569,26 @@ export default function ReviewPage() {
             )}
           </div>
 
-          <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs space-y-3">
-            <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-800 pb-2.5">
-              <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
+          <div className="rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#0f0f0f] p-5 shadow-xs space-y-3">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-neutral-800 pb-2.5">
+              <h4 className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
                 <span>⚡</span> Technical Skills ({draft.skills?.length || 0})
               </h4>
               <Link
                 href="/details/skills"
-                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-slate-800 transition"
+                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-neutral-900 transition"
               >
                 ✏ Edit
               </Link>
             </div>
             {(!draft.skills || draft.skills.length === 0) ? (
-              <p className="text-xs text-gray-400 italic">No skills added.</p>
+              <p className="text-xs text-gray-400 dark:text-neutral-500 italic">No skills added.</p>
             ) : (
               <div className="flex flex-wrap gap-1.5">
                 {draft.skills.map((skill, idx) => (
                   <span
                     key={idx}
-                    className="bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-800 dark:text-slate-200 text-xs px-2.5 py-1 rounded-md font-medium"
+                    className="bg-gray-100 dark:bg-neutral-900 hover:bg-gray-200 dark:hover:bg-neutral-800 text-gray-800 dark:text-neutral-200 text-xs px-2.5 py-1 rounded-md font-medium"
                   >
                     {skill}
                   </span>
@@ -603,28 +597,28 @@ export default function ReviewPage() {
             )}
           </div>
 
-          <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs space-y-3">
-            <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-800 pb-2.5">
-              <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
+          <div className="rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#0f0f0f] p-5 shadow-xs space-y-3">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-neutral-800 pb-2.5">
+              <h4 className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
                 <span>💻</span> Coding Profiles ({draft.codingProfiles?.length || 0})
               </h4>
               <Link
                 href="/details/coding-profiles"
-                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-slate-800 transition"
+                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-neutral-900 transition"
               >
                 ✏ Edit
               </Link>
             </div>
             {(!draft.codingProfiles || draft.codingProfiles.length === 0) ? (
-              <p className="text-xs text-gray-400 italic">No coding profiles added (optional).</p>
+              <p className="text-xs text-gray-400 dark:text-neutral-500 italic">No coding profiles added (optional).</p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {draft.codingProfiles.map((cp, idx) => (
                   <div
                     key={idx}
-                    className="p-2.5 bg-gray-50 dark:bg-slate-800/60 rounded-lg text-xs flex items-center justify-between"
+                    className="p-2.5 bg-gray-50 dark:bg-[#141414] rounded-lg text-xs flex items-center justify-between"
                   >
-                    <span className="font-semibold text-gray-800 dark:text-slate-200">{cp.platform}</span>
+                    <span className="font-semibold text-gray-800 dark:text-neutral-200">{cp.platform}</span>
                     <a
                       href={cp.url}
                       target="_blank"
@@ -639,30 +633,30 @@ export default function ReviewPage() {
             )}
           </div>
 
-          <div className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs space-y-3">
-            <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-800 pb-2.5">
-              <h4 className="text-sm font-bold text-gray-900 dark:text-slate-100 flex items-center gap-2">
+          <div className="rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#0f0f0f] p-5 shadow-xs space-y-3">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-neutral-800 pb-2.5">
+              <h4 className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
                 <span>🏆</span> Achievements &amp; Honors ({draft.achievements?.length || 0})
               </h4>
               <Link
                 href="/details/achievements"
-                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-slate-800 transition"
+                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium px-2 py-1 rounded hover:bg-blue-50 dark:hover:bg-neutral-900 transition"
               >
                 ✏ Edit
               </Link>
             </div>
             {(!draft.achievements || draft.achievements.length === 0) ? (
-              <p className="text-xs text-gray-400 italic">No achievements added (optional).</p>
+              <p className="text-xs text-gray-400 dark:text-neutral-500 italic">No achievements added (optional).</p>
             ) : (
               <div className="space-y-2">
                 {draft.achievements.map((ach, idx) => (
-                  <div key={idx} className="p-3 bg-gray-50 dark:bg-slate-800/60 rounded-lg text-xs space-y-1">
-                    <div className="flex items-center justify-between font-semibold text-gray-800 dark:text-slate-200">
+                  <div key={idx} className="p-3 bg-gray-50 dark:bg-[#141414] rounded-lg text-xs space-y-1">
+                    <div className="flex items-center justify-between font-semibold text-gray-800 dark:text-neutral-200">
                       <span>{ach.title}</span>
-                      {ach.date && <span className="text-gray-400 text-[11px]">{ach.date}</span>}
+                      {ach.date && <span className="text-gray-400 dark:text-neutral-500 text-[11px]">{ach.date}</span>}
                     </div>
                     {ach.description && (
-                      <p className="text-gray-600 dark:text-slate-300 text-[11px]">{ach.description}</p>
+                      <p className="text-gray-600 dark:text-neutral-300 text-[11px]">{ach.description}</p>
                     )}
                   </div>
                 ))}
@@ -674,7 +668,7 @@ export default function ReviewPage() {
             <button
               type="button"
               onClick={() => router.push("/details/achievements")}
-              className="text-sm text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 font-medium px-3 py-2.5"
+              className="text-sm text-gray-500 dark:text-neutral-400 hover:text-gray-700 dark:hover:text-neutral-200 font-medium px-3 py-2.5 cursor-pointer"
             >
               ← Back to Achievements
             </button>

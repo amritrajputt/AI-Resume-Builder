@@ -49,8 +49,7 @@ export default function DashboardPage() {
       });
 
       if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.message || "Failed to trigger generation");
+        throw new Error("Unable to start resume generation. Please try again.");
       }
 
       const data = await res.json();
@@ -61,7 +60,7 @@ export default function DashboardPage() {
         setJobStatus("queued");
       }
     } catch (err: unknown) {
-      if (err instanceof Error) setErrorMsg(err.message);
+      setErrorMsg("Unable to generate resume at this moment. Please try again.");
     }
   };
 
@@ -86,7 +85,7 @@ export default function DashboardPage() {
             }
           } else if (job.status === "failed") {
             clearInterval(interval);
-            setErrorMsg(job.errorMessage || "Resume compilation failed");
+            setErrorMsg("Resume generation could not be completed. Please click Regenerate to try again.");
           }
         }
       } catch (err) {
@@ -114,8 +113,8 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 flex flex-col transition-colors duration-200">
-      <header className="bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-800 px-6 py-4 flex items-center justify-between">
+    <div className="min-h-screen bg-gray-50 dark:bg-black flex flex-col transition-colors duration-200">
+      <header className="bg-white dark:bg-[#0a0a0a] border-b border-gray-200 dark:border-neutral-800 px-6 py-4 flex items-center justify-between">
         <Link href="/" className="brand text-lg font-bold tracking-tight no-underline">
           resumio<span>.</span>
         </Link>
@@ -123,7 +122,7 @@ export default function DashboardPage() {
           <ThemeToggle />
           <Link
             href="/details/personal-details"
-            className="text-xs text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white font-medium px-3 py-1.5 rounded-lg border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 transition"
+            className="text-xs text-gray-600 dark:text-neutral-300 hover:text-gray-900 dark:hover:text-white font-medium px-3 py-1.5 rounded-lg border border-gray-200 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-900 transition"
           >
             ✏ Edit Details
           </Link>
@@ -134,8 +133,8 @@ export default function DashboardPage() {
       <main className="flex-1 max-w-5xl w-full mx-auto p-6 md:p-10 space-y-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100">Your Resume</h1>
-            <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Your Resume</h1>
+            <p className="text-sm text-gray-500 dark:text-neutral-400 mt-1">
               Your details are saved. AI will generate and compile your LaTeX PDF resume.
             </p>
           </div>
@@ -143,7 +142,7 @@ export default function DashboardPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => triggerGeneration()}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs px-4 py-2.5 rounded-lg transition shadow-xs"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs px-4 py-2.5 rounded-lg transition shadow-xs cursor-pointer"
             >
               Regenerate Resume
             </button>
@@ -160,12 +159,19 @@ export default function DashboardPage() {
         </div>
 
         {errorMsg && (
-          <div className="p-4 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm">
-            {errorMsg}
+          <div className="p-4 rounded-xl bg-red-50 dark:bg-neutral-900 border border-red-200 dark:border-red-900/40 text-red-700 dark:text-red-300 text-sm flex items-center justify-between">
+            <span>{errorMsg}</span>
+            <button
+              type="button"
+              onClick={() => setErrorMsg(null)}
+              className="text-red-500 hover:text-red-800 ml-3 text-xs"
+            >
+              ✕
+            </button>
           </div>
         )}
 
-        <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl p-6 shadow-xs flex items-center justify-between gap-4">
+        <div className="bg-white dark:bg-[#0f0f0f] border border-gray-200 dark:border-neutral-800 rounded-xl p-6 shadow-xs flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <span className="flex h-3 w-3 relative">
               <span
@@ -188,14 +194,14 @@ export default function DashboardPage() {
               />
             </span>
             <div>
-              <div className="text-sm font-semibold text-gray-800 dark:text-slate-200 capitalize">
+              <div className="text-sm font-semibold text-gray-800 dark:text-neutral-200 capitalize">
                 Status: {jobStatus}
               </div>
-              <p className="text-xs text-gray-400 dark:text-slate-500">
+              <p className="text-xs text-gray-400 dark:text-neutral-400">
                 {jobStatus === "completed"
                   ? "Your resume has been compiled and is ready!"
                   : jobStatus === "failed"
-                  ? "There was an error generating your resume."
+                  ? "Resume generation encountered an issue. Click Regenerate Resume to try again."
                   : "AI is crafting your LaTeX resume and compiling PDF..."}
               </p>
             </div>
@@ -203,7 +209,7 @@ export default function DashboardPage() {
         </div>
 
         {pdfUrl ? (
-          <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm h-[750px]">
+          <div className="bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-neutral-800 rounded-xl overflow-hidden shadow-sm h-[750px]">
             <iframe
               src={pdfUrl}
               className="w-full h-full border-none"
@@ -211,24 +217,28 @@ export default function DashboardPage() {
             />
           </div>
         ) : (
-          <div className="bg-white dark:bg-slate-900 border border-dashed border-gray-300 dark:border-slate-700 rounded-xl p-12 text-center">
+          <div className="bg-white dark:bg-[#0a0a0a] border border-dashed border-gray-300 dark:border-neutral-800 rounded-xl p-12 text-center">
             <div className="text-4xl mb-3">📄</div>
-            <h3 className="text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">
+            <h3 className="text-sm font-semibold text-gray-700 dark:text-neutral-300 mb-1">
               {jobStatus === "completed"
                 ? "Loading PDF preview..."
+                : jobStatus === "failed"
+                ? "Generation paused"
                 : "Resume compilation in progress"}
             </h3>
-            <p className="text-xs text-gray-400 dark:text-slate-500 max-w-sm mx-auto">
-              Please wait a few seconds while Inngest and LaTeX compile your document.
+            <p className="text-xs text-gray-400 dark:text-neutral-500 max-w-sm mx-auto">
+              {jobStatus === "failed"
+                ? "Click Regenerate Resume above to retry."
+                : "Please wait a few seconds while your document is being prepared."}
             </p>
           </div>
         )}
 
-        <div className="rounded-xl border border-blue-200 dark:border-slate-800 bg-gradient-to-r from-blue-50/80 via-white to-indigo-50/70 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 p-5 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="rounded-xl border border-blue-200 dark:border-neutral-800 bg-gradient-to-r from-blue-50/80 via-white to-neutral-50 dark:from-[#0f0f0f] dark:via-[#0f0f0f] dark:to-black p-5 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div>
-              <h3 className="text-sm font-bold text-gray-900 dark:text-slate-100">Feature Request or Bug Report?</h3>
-              <p className="text-xs text-gray-500 dark:text-slate-400">
+              <h3 className="text-sm font-bold text-gray-900 dark:text-white">Feature Request or Bug Report?</h3>
+              <p className="text-xs text-gray-500 dark:text-neutral-400">
                 Found an issue or want a new feature/template? Send an email directly.
               </p>
             </div>

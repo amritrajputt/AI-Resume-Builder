@@ -47,17 +47,17 @@ export default function Education() {
 
   return (
     <div className="w-full max-w-xl my-20 mr-50">
-      <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-1">Education Details</h2>
-      <p className="text-sm text-gray-500 dark:text-slate-400 mb-4">
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Education Details</h2>
+      <p className="text-sm text-gray-500 dark:text-neutral-400 mb-4">
         Add your academic qualifications (max 2 entries: e.g. B.Tech, M.Tech, 12th).
       </p>
 
-      <div className="mb-6 rounded-2xl border border-blue-200 dark:border-blue-900/60 bg-gradient-to-r from-blue-50/90 via-indigo-50/60 to-blue-50/90 dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 p-4 shadow-xs flex items-start gap-3">
+      <div className="mb-6 rounded-2xl border border-blue-200 dark:border-neutral-800 bg-gradient-to-r from-blue-50/90 via-indigo-50/60 to-blue-50/90 dark:from-[#0f0f0f] dark:via-[#0f0f0f] dark:to-black p-4 shadow-xs flex items-start gap-3">
         <div className="flex h-7 w-7 items-center justify-center rounded-xl bg-blue-600 text-white font-bold text-xs shrink-0 mt-0.5">
           💡
         </div>
-        <div className="text-xs leading-relaxed text-slate-700 dark:text-slate-300">
-          <p className="font-semibold text-slate-900 dark:text-slate-100 mb-0.5">
+        <div className="text-xs leading-relaxed text-neutral-700 dark:text-neutral-300">
+          <p className="font-semibold text-neutral-900 dark:text-white mb-0.5">
             Smart Education Recommendation
           </p>
           <span>
@@ -80,14 +80,14 @@ export default function Education() {
           return (
             <div
               key={index}
-              className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs space-y-4 relative"
+              className="rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#0f0f0f] p-5 shadow-xs space-y-4 relative"
             >
-              <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-800 pb-3">
+              <div className="flex items-center justify-between border-b border-gray-100 dark:border-neutral-800 pb-3">
                 <div className="flex items-center gap-2">
-                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 text-xs font-bold">
+                  <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 dark:bg-neutral-800 text-blue-700 dark:text-blue-400 text-xs font-bold">
                     {index + 1}
                   </span>
-                  <h3 className="text-sm font-semibold text-gray-800 dark:text-slate-200">
+                  <h3 className="text-sm font-semibold text-gray-800 dark:text-neutral-200">
                     {index === 0 ? "Primary Education" : "Secondary Education"}
                   </h3>
                 </div>
@@ -96,7 +96,7 @@ export default function Education() {
                   <button
                     type="button"
                     onClick={() => handleRemoveEducation(index)}
-                    className="text-xs text-red-500 hover:text-red-700 font-medium px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-950/40 transition"
+                    className="text-xs text-red-500 hover:text-red-700 font-medium px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-neutral-900 transition cursor-pointer"
                   >
                     ✕ Remove
                   </button>
@@ -105,7 +105,7 @@ export default function Education() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1">
+                  <label className="block text-xs font-semibold text-gray-600 dark:text-neutral-400 mb-1">
                     Degree / Qualification *
                   </label>
                   <select
@@ -118,7 +118,7 @@ export default function Education() {
                         selected === "Other" ? "" : selected
                       );
                     }}
-                    className="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
+                    className="w-full rounded-lg border border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#141414] text-neutral-900 dark:text-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
                   >
                     <option value="B.Tech">B.Tech (Bachelor of Technology)</option>
                     <option value="M.Tech">M.Tech (Master of Technology)</option>
@@ -133,13 +133,13 @@ export default function Education() {
                       placeholder="Enter degree name (e.g. BCA, B.Sc)"
                       value={item.degree}
                       onChange={(e) => handleFieldChange(index, "degree", e.target.value)}
-                      className="w-full mt-2 rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-3.5 py-2 text-sm outline-none focus:border-blue-500"
+                      className="w-full mt-2 rounded-lg border border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#141414] text-neutral-900 dark:text-white px-3.5 py-2 text-sm outline-none focus:border-blue-500"
                     />
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1">
+                  <label className="block text-xs font-semibold text-gray-600 dark:text-neutral-400 mb-1">
                     University / College / School *
                   </label>
                   <input
@@ -152,14 +152,14 @@ export default function Education() {
                     }
                     value={item.institution}
                     onChange={(e) => handleFieldChange(index, "institution", e.target.value)}
-                    className="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
+                    className="w-full rounded-lg border border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#141414] text-neutral-900 dark:text-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1">
+                  <label className="block text-xs font-semibold text-gray-600 dark:text-neutral-400 mb-1">
                     Passing / Graduation Year *
                   </label>
                   <input
@@ -168,12 +168,12 @@ export default function Education() {
                     placeholder="e.g. 2024 or 2020 - 2024"
                     value={item.year}
                     onChange={(e) => handleFieldChange(index, "year", e.target.value)}
-                    className="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
+                    className="w-full rounded-lg border border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#141414] text-neutral-900 dark:text-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1">
+                  <label className="block text-xs font-semibold text-gray-600 dark:text-neutral-400 mb-1">
                     CGPA / Percentage
                   </label>
                   <input
@@ -181,7 +181,7 @@ export default function Education() {
                     placeholder="e.g. 8.5 CGPA or 85%"
                     value={item.cgpa}
                     onChange={(e) => handleFieldChange(index, "cgpa", e.target.value)}
-                    className="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
+                    className="w-full rounded-lg border border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#141414] text-neutral-900 dark:text-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
                   />
                 </div>
               </div>
@@ -193,7 +193,7 @@ export default function Education() {
           <button
             type="button"
             onClick={handleAddEducation}
-            className="w-full py-3 border-2 border-dashed border-gray-300 dark:border-slate-700 hover:border-blue-500 dark:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 text-gray-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm font-medium rounded-xl transition flex items-center justify-center gap-2"
+            className="w-full py-3 border-2 border-dashed border-gray-300 dark:border-neutral-800 hover:border-blue-500 dark:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-neutral-900/60 text-gray-600 dark:text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm font-medium rounded-xl transition flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>+</span> Add Another Education (Max 2)
           </button>
@@ -203,7 +203,7 @@ export default function Education() {
           <button
             type="button"
             onClick={() => router.push("/details/personal-details")}
-            className="text-sm text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 font-medium px-3 py-2.5"
+            className="text-sm text-gray-500 dark:text-neutral-400 hover:text-gray-700 dark:hover:text-neutral-200 font-medium px-3 py-2.5 cursor-pointer"
           >
             ← Back
           </button>
@@ -212,13 +212,13 @@ export default function Education() {
             <button
               type="button"
               onClick={() => router.push("/details/experience")}
-              className="text-sm text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 px-3 py-2.5"
+              className="text-sm text-gray-500 dark:text-neutral-400 hover:text-gray-700 dark:hover:text-neutral-200 px-3 py-2.5 cursor-pointer"
             >
               Skip
             </button>
             <button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm px-5 py-2.5 rounded-lg transition"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm px-5 py-2.5 rounded-lg transition cursor-pointer"
             >
               Save & Continue →
             </button>

@@ -26,7 +26,7 @@ const getCode = inngest.createFunction(
             await DataService.updateGenerationJob(
                 event.data.jobId,
                 "failed",
-                error instanceof Error ? error.message : "Could not load resume data",
+                "Could not load resume data",
             );
             throw error;
         });
@@ -55,7 +55,7 @@ const getCode = inngest.createFunction(
             await DataService.updateGenerationJob(
                 event.data.jobId,
                 "failed",
-                error instanceof Error ? error.message : "AI generation failed",
+                "AI generation encountered an issue",
             );
             throw error;
         });
@@ -111,7 +111,7 @@ export const compileResumeTex = inngest.createFunction(
             await step.run("mark-failed", () => DataService.updateGenerationJob(
                 event.data.jobId,
                 "failed",
-                error instanceof Error ? error.message : "Compilation failed",
+                "Compilation encountered an issue",
             ));
             throw error;
         }

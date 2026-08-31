@@ -49,30 +49,30 @@ export default function AchievementsPage() {
 
   return (
     <div className="w-full max-w-xl my-20 mr-50">
-      <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-1">Achievements & Honors</h2>
-      <p className="text-sm text-gray-500 dark:text-slate-400 mb-6">
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Achievements & Honors</h2>
+      <p className="text-sm text-gray-500 dark:text-neutral-400 mb-6">
         Add notable achievements, hackathon wins, contest ranks, or awards (optional).
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {errorMsg && (
-          <div className="p-4 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm">
+          <div className="p-4 rounded-xl bg-red-50 dark:bg-neutral-900 border border-red-200 dark:border-red-900/40 text-red-700 dark:text-red-300 text-sm">
             {errorMsg}
           </div>
         )}
 
         {achievementsList.length === 0 && (
-          <div className="rounded-xl border border-dashed border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 p-8 text-center">
-            <p className="text-sm text-gray-600 dark:text-slate-300 font-medium mb-1">
+          <div className="rounded-xl border border-dashed border-gray-300 dark:border-neutral-800 bg-white dark:bg-[#0a0a0a] p-8 text-center">
+            <p className="text-sm text-gray-600 dark:text-neutral-300 font-medium mb-1">
               No achievements added yet
             </p>
-            <p className="text-xs text-gray-400 dark:text-slate-500 mb-4">
+            <p className="text-xs text-gray-400 dark:text-neutral-500 mb-4">
               Stand out by highlighting competitive programming ranks, hackathons, or scholarships.
             </p>
             <button
               type="button"
               onClick={handleAddAchievement}
-              className="bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-xs font-semibold px-4 py-2 rounded-lg transition"
+              className="bg-blue-50 dark:bg-neutral-900 text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-neutral-800 text-xs font-semibold px-4 py-2 rounded-lg transition cursor-pointer"
             >
               + Add Achievement
             </button>
@@ -82,14 +82,14 @@ export default function AchievementsPage() {
         {achievementsList.map((item, index) => (
           <div
             key={index}
-            className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs space-y-4 relative"
+            className="rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#0f0f0f] p-5 shadow-xs space-y-4 relative"
           >
-            <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-800 pb-3">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-neutral-800 pb-3">
               <div className="flex items-center gap-2">
-                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 text-xs font-bold">
+                <span className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 dark:bg-neutral-800 text-blue-700 dark:text-blue-400 text-xs font-bold">
                   {index + 1}
                 </span>
-                <h3 className="text-sm font-semibold text-gray-800 dark:text-slate-200">
+                <h3 className="text-sm font-semibold text-gray-800 dark:text-neutral-200">
                   {item.title || `Achievement #${index + 1}`}
                 </h3>
               </div>
@@ -97,14 +97,14 @@ export default function AchievementsPage() {
               <button
                 type="button"
                 onClick={() => handleRemoveAchievement(index)}
-                className="text-xs text-red-500 hover:text-red-700 font-medium px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-950/40 transition"
+                className="text-xs text-red-500 hover:text-red-700 font-medium px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-neutral-900 transition cursor-pointer"
               >
                 ✕ Remove
               </button>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1">
+              <label className="block text-xs font-semibold text-gray-600 dark:text-neutral-400 mb-1">
                 Achievement Title *
               </label>
               <input
@@ -115,12 +115,12 @@ export default function AchievementsPage() {
                 onChange={(e) =>
                   handleFieldChange(index, "title", e.target.value)
                 }
-                className="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
+                className="w-full rounded-lg border border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#141414] text-neutral-900 dark:text-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1">
+              <label className="block text-xs font-semibold text-gray-600 dark:text-neutral-400 mb-1">
                 Description / Impact
               </label>
               <textarea
@@ -130,13 +130,13 @@ export default function AchievementsPage() {
                 onChange={(e) =>
                   handleFieldChange(index, "description", e.target.value)
                 }
-                className="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 resize-y"
+                className="w-full rounded-lg border border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#141414] text-neutral-900 dark:text-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 resize-y"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1">
+                <label className="block text-xs font-semibold text-gray-600 dark:text-neutral-400 mb-1">
                   Date / Year
                 </label>
                 <input
@@ -146,7 +146,7 @@ export default function AchievementsPage() {
                   onChange={(e) =>
                     handleFieldChange(index, "date", e.target.value)
                   }
-                  className="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
+                  className="w-full rounded-lg border border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#141414] text-neutral-900 dark:text-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-500"
                 />
               </div>
             </div>
@@ -157,7 +157,7 @@ export default function AchievementsPage() {
           <button
             type="button"
             onClick={handleAddAchievement}
-            className="w-full py-3 border-2 border-dashed border-gray-300 dark:border-slate-700 hover:border-blue-500 dark:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 text-gray-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm font-medium rounded-xl transition flex items-center justify-center gap-2"
+            className="w-full py-3 border-2 border-dashed border-gray-300 dark:border-neutral-800 hover:border-blue-500 dark:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-neutral-900/60 text-gray-600 dark:text-neutral-400 hover:text-blue-600 dark:hover:text-blue-400 text-sm font-medium rounded-xl transition flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>+</span> Add Another Achievement
           </button>
@@ -167,14 +167,14 @@ export default function AchievementsPage() {
           <button
             type="button"
             onClick={() => router.push("/details/coding-profiles")}
-            className="text-sm text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 font-medium px-3 py-2.5"
+            className="text-sm text-gray-500 dark:text-neutral-400 hover:text-gray-700 dark:hover:text-neutral-200 font-medium px-3 py-2.5 cursor-pointer"
           >
             ← Back
           </button>
 
           <button
             type="submit"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm px-6 py-2.5 rounded-lg transition shadow-sm"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm px-6 py-2.5 rounded-lg transition shadow-sm cursor-pointer"
           >
             Review & Generate Resume →
           </button>

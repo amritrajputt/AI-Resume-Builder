@@ -20,7 +20,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
       type="button"
       onClick={toggleTheme}
       aria-label="Toggle Dark Mode"
-      className={`relative inline-flex items-center justify-center w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors shadow-xs ${className}`}
+      className={`relative inline-flex items-center justify-center w-8 h-8 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#141414] text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors shadow-xs cursor-pointer ${className}`}
     >
       {theme === "dark" ? (
         <svg
@@ -40,7 +40,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
       ) : (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-4 w-4 text-slate-600"
+          className="h-4 w-4 text-neutral-600"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
