@@ -72,7 +72,7 @@ export default function ProjectsPage() {
     <div className="w-full max-w-xl my-20 mr-50">
       <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Projects</h2>
       <p className="text-sm text-gray-500 dark:text-neutral-400 mb-4">
-        Highlight your best personal, open-source, or academic projects.
+        Provide enough details (architecture, key features, APIs, and numbers like users or % speedup) so AI can generate 4–5 solid bullet points.
       </p>
 
       <div className="mb-6 rounded-2xl border border-blue-200 dark:border-neutral-800 bg-gradient-to-r from-blue-50/90 via-indigo-50/60 to-blue-50/90 dark:from-[#0f0f0f] dark:via-[#0f0f0f] dark:to-black p-4 shadow-xs flex items-start gap-3">
@@ -104,18 +104,6 @@ export default function ProjectsPage() {
             </span>
           )}
         </div>
-      </div>
-
-      <div className="mb-6 rounded-2xl border border-indigo-200 dark:border-indigo-950/70 bg-indigo-50/50 dark:bg-[#0c0f1d] p-4 text-xs text-neutral-700 dark:text-neutral-300">
-        <p className="font-semibold text-indigo-900 dark:text-indigo-300 mb-1 flex items-center gap-1.5">
-          <span>🚀</span> How to give enough details for AI to generate 4–5 solid points in numbers:
-        </p>
-        <ul className="list-disc list-inside space-y-1 text-[11.5px] text-neutral-600 dark:text-neutral-300 mt-1.5 ml-1">
-          <li><strong>Architecture &amp; Core Tech:</strong> What you built, frameworks, databases, and microservices/queues used.</li>
-          <li><strong>Key Features &amp; APIs:</strong> Real-time WebSockets, REST/GraphQL APIs, Auth (JWT/OAuth), or async workers.</li>
-          <li><strong>Quantified Impact &amp; Numbers:</strong> Scale/users (e.g. 5k+ users), latency reduction (e.g. 40% faster), cache hit rate (95%+), or TPS.</li>
-          <li><strong>Deployment &amp; Quality:</strong> Docker containers, CI/CD pipelines, unit test coverage, or cloud hosting (AWS/Vercel).</li>
-        </ul>
       </div>
 
       <form
@@ -238,20 +226,20 @@ export default function ProjectsPage() {
 
             <div>
               <label className="block text-xs font-semibold text-gray-600 dark:text-neutral-400 mb-1">
-                Project Description &amp; Technical Details (Provide details so AI can create 4–5 solid bullet points) *
+                Description &amp; Details *
               </label>
               <textarea
-                rows={4}
+                rows={3}
                 required
-                placeholder={`Describe the system architecture, key features, and impact with numbers. For example:\n• Built real-time collaborative canvas with Next.js, Node.js, and Redis pub/sub\n• Implemented WebSocket engine handling 5k+ concurrent users with <50ms latency\n• Optimized PostgreSQL queries with composite indexing, cutting query times by 45%\n• Packaged into Docker container with CI/CD pipeline achieving 99.9% uptime`}
+                placeholder="Give enough details so AI can generate 4–5 solid points (such as architecture & tech stack, key features/APIs built, and numbers like users, latency, or % speedup)..."
                 value={item.description}
                 onChange={(e) =>
                   handleFieldChange(index, "description", e.target.value)
                 }
-                className="w-full rounded-lg border border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#141414] text-neutral-900 dark:text-white px-3.5 py-2.5 text-xs outline-none focus:border-blue-500 resize-y font-mono leading-relaxed"
+                className="w-full rounded-lg border border-gray-200 dark:border-neutral-800 bg-white dark:bg-[#141414] text-neutral-900 dark:text-white px-3.5 py-2.5 text-sm outline-none focus:border-blue-500 resize-y"
               />
-              <p className="text-[11px] text-gray-400 dark:text-neutral-500 mt-1.5 leading-normal">
-                💡 <strong>Pro Tip:</strong> Include technical details (stack, APIs, database, caching) and quantified metrics (e.g. 10k+ users, 40% speedup, 50ms latency). The AI will synthesize <strong>4–5 solid, quantified LaTeX bullet points</strong>.
+              <p className="text-[11px] text-gray-400 dark:text-neutral-500 mt-1">
+                💡 Give enough details (architecture, key features, and numbers like 40% speedup or 5k+ users) so AI can generate 4–5 solid bullet points.
               </p>
             </div>
 
