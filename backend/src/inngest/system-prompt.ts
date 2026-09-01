@@ -179,12 +179,13 @@ Degree \\hfill Date Range
    * Bold **2–3 key technical terms** in every bullet, prioritizing technologies, frameworks, architectural concepts, infrastructure components, or engineering practices.
    * Keep bullets dense, technically specific, and achievement-oriented while avoiding unnecessary filler, repetition, or vague statements.
 
-3. **5-BULLET STRUCTURE PATTERN**:
-   - Bullet 1: Core system architecture & primary engineering objective.
-   - Bullet 2: Database schema, ORM query design, indexing, or data modeling.
+3. **5-BULLET STRUCTURE PATTERN & QUANTIFIED METRICS MANDATE**:
+   - Bullet 1: Core system architecture & primary engineering objective with scale/scope.
+   - Bullet 2: Database schema, ORM query design, indexing, data modeling, or latency improvements (e.g. 40%+ query speedup).
    - Bullet 3: State management, API protocol design (REST/GraphQL/gRPC), authentication, or authorization flow.
-   - Bullet 4: Asynchronous background worker jobs, real-time WebSockets, streaming, or external service integrations.
-   - Bullet 5: Performance optimization, caching, error resilience, or developer/user impact.
+   - Bullet 4: Asynchronous background worker jobs, real-time WebSockets, streaming, or external service integrations handling concurrency (e.g. 5k+ concurrent users, <50ms latency).
+   - Bullet 5: Performance optimization, caching (Redis), error resilience, CI/CD Dockerization, or test coverage (90%+).
+   * For every project, synthesize exactly 4 to 5 solid, punchy points containing concrete numbers, percentages, and metrics (e.g., latency, throughput, scale, efficiency, cache hit rates) derived from the user's technical input.
 
 ## Handling missing/optional data
 
