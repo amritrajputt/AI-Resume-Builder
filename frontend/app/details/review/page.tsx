@@ -65,8 +65,8 @@ export default function ReviewPage() {
             setErrorMsg("Resume generation could not be completed. Please click Generate Resume to try again.");
           }
         }
-      } catch (err) {
-        console.error("Polling error:", err);
+      } catch {
+        // Polling error silently handled
       }
     }, 2000);
 

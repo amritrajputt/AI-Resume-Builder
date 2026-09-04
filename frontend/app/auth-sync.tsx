@@ -39,7 +39,7 @@ export function AuthSync() {
       syncedUserId.current = user.id;
     };
 
-    syncUser().catch((error) => console.error(error));
+    syncUser().catch(() => {});
   }, [getToken, isLoaded, isSignedIn, user]);
 
   return null;

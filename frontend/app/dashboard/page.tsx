@@ -88,8 +88,8 @@ export default function DashboardPage() {
             setErrorMsg("Resume generation could not be completed. Please click Regenerate to try again.");
           }
         }
-      } catch (err) {
-        console.error(err);
+      } catch {
+        // Polling error silently handled
       }
     }, 2500);
 
@@ -107,8 +107,8 @@ export default function DashboardPage() {
         const url = URL.createObjectURL(blob);
         setPdfUrl(url);
       }
-    } catch (err) {
-      console.error("Failed to load PDF:", err);
+    } catch {
+      // PDF load error silently handled
     }
   };
 
