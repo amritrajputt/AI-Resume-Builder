@@ -11,8 +11,28 @@ const app = express();
 app.set('trust proxy', true);
 
 app.use(express.json());
+const allowedOrigins = [
+  "https://resumiobyamrit.vercel.app",
+  ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
+];
+
 app.use(cors({
-  origin: true,
+  origin: (origin, callback) => {
+    // Allow non-browser requests (e.g. server-to-server, curl, mobile, inngest)
+    if (!origin) return callback(null, true);
+
+    const cleanOrigin = origin.replace(/\/$/, "");
+    const isAllowed =
+      allowedOrigins.some((url) => url.replace(/\/$/, "") === cleanOrigin) ||
+      /^http:\/\/localhost(:\d+)?$/.test(cleanOrigin) ||
+      /^http:\/\/127\.0\.0\.1(:\d+)?$/.test(cleanOrigin);
+
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      callback(null, false);
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
