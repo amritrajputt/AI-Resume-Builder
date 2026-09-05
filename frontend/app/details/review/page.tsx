@@ -114,7 +114,18 @@ export default function ReviewPage() {
       });
 
       if (!genRes.ok) {
-        throw new Error("Unable to start AI generation job.");
+        const genErrData = await genRes.json().catch(() => null);
+        if (genRes.status === 429) {
+          const resetHeader = genRes.headers.get("x-ratelimit-reset");
+          const waitTime = resetHeader
+            ? Number(resetHeader) >= 60
+              ? `${Math.ceil(Number(resetHeader) / 60)} minute(s)`
+              : `${resetHeader} seconds`
+            : "15 minutes";
+          const rateMsg = genErrData?.message || `Rate limit reached. You can only make 5 generation requests per 15 minutes. Please try again in ${waitTime}.`;
+          throw new Error(rateMsg);
+        }
+        throw new Error(genErrData?.message || "Unable to start AI generation job.");
       }
 
       const genJson = await genRes.json();
@@ -128,7 +139,11 @@ export default function ReviewPage() {
       }
     } catch (err: unknown) {
       setIsGenerating(false);
-      setErrorMsg("Unable to process your resume right now. Please try again in a few moments.");
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Unable to process your resume right now. Please try again in a few moments.";
+      setErrorMsg(message);
     }
   };
 
@@ -172,12 +187,26 @@ export default function ReviewPage() {
       </div>
 
       {errorMsg && (
-        <div className="p-4 rounded-xl bg-red-50 dark:bg-neutral-900 border border-red-200 dark:border-red-900/40 text-red-700 dark:text-red-300 text-sm flex items-start justify-between">
-          <span>{errorMsg}</span>
+        <div className={`p-4 rounded-xl border text-sm flex items-start justify-between ${
+          errorMsg.toLowerCase().includes("rate limit") || errorMsg.toLowerCase().includes("too many requests")
+            ? "bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-700/60 text-amber-900 dark:text-amber-200"
+            : "bg-red-50 dark:bg-neutral-900 border border-red-200 dark:border-red-900/40 text-red-700 dark:text-red-300"
+        }`}>
+          <div className="flex items-start gap-2.5">
+            <span className="text-lg leading-none">
+              {errorMsg.toLowerCase().includes("rate limit") || errorMsg.toLowerCase().includes("too many requests") ? "⏳" : "⚠️"}
+            </span>
+            <div className="space-y-0.5">
+              <p className="font-semibold text-xs uppercase tracking-wider opacity-80">
+                {errorMsg.toLowerCase().includes("rate limit") || errorMsg.toLowerCase().includes("too many requests") ? "Rate Limit Reached" : "Error"}
+              </p>
+              <p className="text-sm font-medium">{errorMsg}</p>
+            </div>
+          </div>
           <button
             type="button"
             onClick={() => setErrorMsg(null)}
-            className="text-red-500 hover:text-red-800 ml-3 text-xs"
+            className="text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200 ml-3 text-xs font-bold"
           >
             ✕
           </button>
