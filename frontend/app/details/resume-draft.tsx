@@ -1,7 +1,6 @@
 "use client";
 
 import { createContext, startTransition, useContext, useEffect, useState } from "react";
-import { useAuth } from "@clerk/nextjs";
 
 export type DegreeType = "B.Tech" | "M.Tech" | "12th" | string;
 
@@ -91,7 +90,6 @@ const ResumeDraftContext = createContext<{
 } | null>(null);
 
 export function ResumeDraftProvider({ children }: { children: React.ReactNode }) {
-  const { getToken } = useAuth();
   const [draft, setDraft] = useState<ResumeDraft>(emptyDraft);
 
   useEffect(() => {
@@ -142,14 +140,6 @@ export function ResumeDraftProvider({ children }: { children: React.ReactNode })
   };
 
   const saveResume = async () => {
-    const token = await getToken();
-    const headers: Record<string, string> = {
-      "Content-Type": "application/json",
-    };
-    if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
-    }
-
     const payload = {
       ...draft,
       phone: draft.phone || undefined,
@@ -175,7 +165,9 @@ export function ResumeDraftProvider({ children }: { children: React.ReactNode })
 
     return fetch(`${backendUrl}/data/savedetails`, {
       method: "POST",
-      headers,
+      headers: {
+        "Content-Type": "application/json",
+      },
       credentials: "include",
       body: JSON.stringify(payload),
     });

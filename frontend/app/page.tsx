@@ -2,14 +2,11 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { UserButton, useAuth, useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ThemeToggle } from "./theme-toggle";
 
 export default function Home() {
-  const { isLoaded, isSignedIn } = useAuth();
-  const { openSignIn } = useClerk();
   const router = useRouter();
 
   const [featureCategory, setFeatureCategory] = useState("Resume Section Request");
@@ -19,12 +16,7 @@ export default function Home() {
   const [copiedEmail, setCopiedEmail] = useState(false);
 
   const handleGetStarted = () => {
-    if (!isLoaded) return;
-    if (!isSignedIn) {
-      openSignIn();
-    } else {
-      router.push("/details/personal-details");
-    }
+    router.push("/details/personal-details");
   };
 
   const getMailData = () => {
@@ -61,10 +53,9 @@ export default function Home() {
         </div>
         <div className="nav-actions">
           <ThemeToggle />
-          {isSignedIn && <UserButton />}
-          {isLoaded && !isSignedIn && (
-            <button onClick={() => openSignIn()} className="text-button">Sign in</button>
-          )}
+          <Link href="/details/personal-details" className="button button-primary text-xs py-2 px-3.5">
+            Get Started ↗
+          </Link>
         </div>
       </nav>
 

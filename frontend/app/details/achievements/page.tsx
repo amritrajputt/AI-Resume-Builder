@@ -3,13 +3,11 @@
 import { useResumeDraft, AchievementItem } from "../resume-draft";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useAuth } from "@clerk/nextjs";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:5000";
 
 export default function AchievementsPage() {
   const { draft, updateDraft } = useResumeDraft();
-  const { getToken } = useAuth();
   const router = useRouter();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 

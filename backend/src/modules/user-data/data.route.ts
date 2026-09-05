@@ -1,19 +1,18 @@
-import Router from "express";
+import { Router } from "express";
 import { DataController } from "./data.controller";
-import { requireAuth } from "../../common/middleware/auth.middleware";
 
 const dataRouter = Router();
 
-dataRouter.get("/resumes", requireAuth, DataController.getData);
-dataRouter.post("/resumes", requireAuth, DataController.saveData);
-dataRouter.patch("/resumes/:id", requireAuth, DataController.updateData);
+dataRouter.get("/resumes", DataController.getData);
+dataRouter.post("/resumes", DataController.saveData);
+dataRouter.patch("/resumes/:id", DataController.updateData);
+dataRouter.get("/getip", DataController.getIp);
+dataRouter.get("/invokeai", DataController.getData);
+dataRouter.post("/savedetails", DataController.saveData);
+dataRouter.patch("/updatedetails/:id", DataController.updateData);
 
-dataRouter.get("/invokeai", requireAuth, DataController.getData);
-dataRouter.post("/savedetails", requireAuth, DataController.saveData);
-dataRouter.patch("/updatedetails/:id", requireAuth, DataController.updateData);
-
-dataRouter.post("/generate", requireAuth, DataController.generate);
-dataRouter.get("/generation/:id", requireAuth, DataController.getGenerationStatus);
-dataRouter.get("/:id/pdf", requireAuth, DataController.getPdf);
+dataRouter.post("/generate", DataController.generate);
+dataRouter.get("/generation/:id", DataController.getGenerationStatus);
+dataRouter.get("/:id/pdf", DataController.getPdf);
 
 export { dataRouter };

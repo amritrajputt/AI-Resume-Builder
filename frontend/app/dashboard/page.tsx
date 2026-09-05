@@ -1,6 +1,5 @@
 "use client";
 
-import { useAuth, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
 import { ThemeToggle } from "../theme-toggle";
@@ -14,7 +13,6 @@ type GenerationJob = {
 };
 
 export default function DashboardPage() {
-  const { getToken, isLoaded, isSignedIn } = useAuth();
   const [isPending, startTransition] = useTransition();
   const [resumeId, setResumeId] = useState<string | null>(null);
   const [jobId, setJobId] = useState<string | null>(null);
@@ -35,12 +33,10 @@ export default function DashboardPage() {
 
     setErrorMsg(null);
     try {
-      const token = await getToken();
       const res = await fetch(`${backendUrl}/data/generate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           resumeId: targetResumeId,
@@ -69,10 +65,7 @@ export default function DashboardPage() {
 
     const interval = setInterval(async () => {
       try {
-        const token = await getToken();
-        const res = await fetch(`${backendUrl}/data/generation/${jobId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await fetch(`${backendUrl}/data/generation/${jobId}`);
         if (res.ok) {
           const json = await res.json();
           const job: GenerationJob = json.data;
@@ -94,14 +87,11 @@ export default function DashboardPage() {
     }, 2500);
 
     return () => clearInterval(interval);
-  }, [jobId, resumeId, getToken]);
+  }, [jobId, resumeId]);
 
   const fetchPdf = async (targetResumeId: string) => {
     try {
-      const token = await getToken();
-      const res = await fetch(`${backendUrl}/data/${targetResumeId}/pdf`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(`${backendUrl}/data/${targetResumeId}/pdf`);
       if (res.ok) {
         const blob = await res.blob();
         const url = URL.createObjectURL(blob);
@@ -126,7 +116,6 @@ export default function DashboardPage() {
           >
             ✏ Edit Details
           </Link>
-          <UserButton />
         </div>
       </header>
 

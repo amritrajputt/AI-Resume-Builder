@@ -3,7 +3,6 @@
 import { useResumeDraft } from "../resume-draft";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
-import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:5000";
@@ -16,7 +15,6 @@ type GenerationJob = {
 
 export default function ReviewPage() {
   const { draft, saveResume } = useResumeDraft();
-  const { getToken } = useAuth();
   const router = useRouter();
 
   const [aiPrompt, setAiPrompt] = useState<string>(
@@ -36,12 +34,7 @@ export default function ReviewPage() {
 
     const interval = setInterval(async () => {
       try {
-        const token = await getToken();
-        if (!token) return;
-
-        const res = await fetch(`${backendUrl}/data/generation/${jobId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await fetch(`${backendUrl}/data/generation/${jobId}`);
 
         if (res.ok) {
           const json = await res.json();
@@ -53,7 +46,7 @@ export default function ReviewPage() {
             clearInterval(interval);
             const savedResumeId = window.sessionStorage.getItem("resumio-saved-resume-id");
             if (savedResumeId) {
-              await fetchPdf(savedResumeId, token);
+              await fetchPdf(savedResumeId);
               setActiveTab("pdf");
               setTimeout(() => {
                 pdfRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -71,13 +64,11 @@ export default function ReviewPage() {
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [jobId, jobStatus, getToken]);
+  }, [jobId, jobStatus]);
 
-  const fetchPdf = async (targetResumeId: string, token: string) => {
+  const fetchPdf = async (targetResumeId: string) => {
     try {
-      const res = await fetch(`${backendUrl}/data/${targetResumeId}/pdf`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(`${backendUrl}/data/${targetResumeId}/pdf`);
       if (res.ok) {
         const blob = await res.blob();
         const url = URL.createObjectURL(blob);
@@ -111,16 +102,10 @@ export default function ReviewPage() {
 
       window.sessionStorage.setItem("resumio-saved-resume-id", savedResume.id);
 
-      const token = await getToken();
-      if (!token) {
-        throw new Error("Please sign in to generate your resume.");
-      }
-
       const genRes = await fetch(`${backendUrl}/data/generate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           resumeId: savedResume.id,

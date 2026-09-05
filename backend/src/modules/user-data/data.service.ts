@@ -6,11 +6,43 @@ import { ApiError } from "../../common/errors/ApiError";
 type ResumeData = InferInsertModel<typeof resumes>;
 
 export class DataService {
-    static async getInternalUserId(clerkId: string) {
-        if (!clerkId) throw ApiError.unauthorized("User authentication ID is missing");
-        const [user] = await db.select({ id: users.id }).from(users).where(eq(users.clerkId, clerkId));
-        if (!user) throw ApiError.notFound("User profile not found");
-        return user.id;
+    static async getInternalUserId(userIdentifier?: string) {
+        const idKey = userIdentifier?.trim() ? `ip:${userIdentifier.trim()}` : "ip:default";
+        const email = `${idKey.replace(/[^a-zA-Z0-9]/g, "_")}@anonymous.local`;
+
+        const [existing] = await db
+            .select({ id: users.id })
+            .from(users)
+            .where(eq(users.clerkId, idKey));
+
+        if (existing) {
+            return existing.id;
+        }
+
+        const [newUser] = await db
+            .insert(users)
+            .values({
+                clerkId: idKey,
+                name: "Guest User",
+                email,
+            })
+            .onConflictDoNothing()
+            .returning({ id: users.id });
+
+        if (newUser) {
+            return newUser.id;
+        }
+
+        const [found] = await db
+            .select({ id: users.id })
+            .from(users)
+            .where(eq(users.clerkId, idKey));
+
+        if (!found) {
+            throw ApiError.internalServerError("Could not initialize guest profile");
+        }
+
+        return found.id;
     }
 
     static async getData(clerkId: string) {
