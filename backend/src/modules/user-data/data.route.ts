@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { DataController } from "./data.controller";
+import { ipRateLimiter } from "../../db/redis";
 
 const dataRouter = Router();
 
@@ -11,7 +12,7 @@ dataRouter.get("/invokeai", DataController.getData);
 dataRouter.post("/savedetails", DataController.saveData);
 dataRouter.patch("/updatedetails/:id", DataController.updateData);
 
-dataRouter.post("/generate", DataController.generate);
+dataRouter.post("/generate", ipRateLimiter, DataController.generate);
 dataRouter.get("/generation/:id", DataController.getGenerationStatus);
 dataRouter.get("/:id/pdf", DataController.getPdf);
 
