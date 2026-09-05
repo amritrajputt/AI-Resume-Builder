@@ -7,8 +7,6 @@ const dataRouter = Router();
 dataRouter.get("/resumes", DataController.getData);
 dataRouter.post("/resumes", DataController.saveData);
 dataRouter.patch("/resumes/:id", DataController.updateData);
-dataRouter.get("/getip", DataController.getIp);
-dataRouter.get("/invokeai", DataController.getData);
 dataRouter.post("/savedetails", DataController.saveData);
 dataRouter.patch("/updatedetails/:id", DataController.updateData);
 

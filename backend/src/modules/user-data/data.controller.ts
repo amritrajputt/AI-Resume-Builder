@@ -21,10 +21,7 @@ function getClientIp(req: Request): string {
 }
 
 export class DataController {
-    static async getIp(req: Request, res: Response) {
-        const ip = getClientIp(req);
-        return res.json(ApiResponse.ok({ ip }, "Client IP retrieved"));
-    }
+    
 
     static async getData(req: Request, res: Response, next: NextFunction) {
         try {
