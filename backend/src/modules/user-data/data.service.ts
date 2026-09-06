@@ -13,7 +13,7 @@ export class DataService {
         const [existing] = await db
             .select({ id: users.id })
             .from(users)
-            .where(eq(users.clerkId, idKey));
+            .where(eq(users.email, email));
 
         if (existing) {
             return existing.id;
@@ -22,7 +22,6 @@ export class DataService {
         const [newUser] = await db
             .insert(users)
             .values({
-                clerkId: idKey,
                 name: "Guest User",
                 email,
             })
@@ -36,7 +35,7 @@ export class DataService {
         const [found] = await db
             .select({ id: users.id })
             .from(users)
-            .where(eq(users.clerkId, idKey));
+            .where(eq(users.email, email));
 
         if (!found) {
             throw ApiError.internalServerError("Could not initialize guest profile");
@@ -45,8 +44,8 @@ export class DataService {
         return found.id;
     }
 
-    static async getData(clerkId: string) {
-        const userId = await this.getInternalUserId(clerkId);
+    static async getData(userIdentifier: string) {
+        const userId = await this.getInternalUserId(userIdentifier);
         const resumeList = await db
             .select()
             .from(resumes)
@@ -56,8 +55,8 @@ export class DataService {
         return resumeList;
     }
 
-    static async getFormattedResumeForAI(clerkId: string, resumeId?: string) {
-        const userId = await this.getInternalUserId(clerkId);
+    static async getFormattedResumeForAI(userIdentifier: string, resumeId?: string) {
+        const userId = await this.getInternalUserId(userIdentifier);
         const resumeList = await db
             .select()
             .from(resumes)
@@ -97,8 +96,8 @@ export class DataService {
         ];
     }
 
-    static async saveData(data: Omit<ResumeData, "userId">, clerkId: string) {
-        const userId = await this.getInternalUserId(clerkId);
+    static async saveData(data: Omit<ResumeData, "userId">, userIdentifier: string) {
+        const userId = await this.getInternalUserId(userIdentifier);
         const [existing] = await db
             .select({ id: resumes.id })
             .from(resumes)
@@ -121,8 +120,8 @@ export class DataService {
         if (!newResume) throw ApiError.internalServerError("Resume could not be saved");
         return newResume;
     }
-    static async updateData(id: string, clerkId: string, data: Partial<ResumeData>) {
-        const userId = await this.getInternalUserId(clerkId);
+    static async updateData(id: string, userIdentifier: string, data: Partial<ResumeData>) {
+        const userId = await this.getInternalUserId(userIdentifier);
         const [updatedResume] = await db
             .update(resumes)
             .set(data)
@@ -131,8 +130,8 @@ export class DataService {
         return updatedResume;
     }
 
-    static async saveTexFile(resumeId: string, clerkId: string, texFile: string) {
-        const userId = await this.getInternalUserId(clerkId);
+    static async saveTexFile(resumeId: string, userIdentifier: string, texFile: string) {
+        const userId = await this.getInternalUserId(userIdentifier);
         const [ownedResume] = await db
             .select({ id: resumes.id })
             .from(resumes)
@@ -164,8 +163,8 @@ export class DataService {
         return savedTexFile;
     }
 
-    static async savePdfFile(resumeId: string, clerkId: string, pdfFile: string) {
-        const userId = await this.getInternalUserId(clerkId);
+    static async savePdfFile(resumeId: string, userIdentifier: string, pdfFile: string) {
+        const userId = await this.getInternalUserId(userIdentifier);
         const [ownedResume] = await db
             .select({ id: resumes.id })
             .from(resumes)
@@ -197,8 +196,8 @@ export class DataService {
         return savedPdfFile;
     }
 
-    static async createGenerationJob(resumeId: string, clerkId: string, message: string) {
-        const userId = await this.getInternalUserId(clerkId);
+    static async createGenerationJob(resumeId: string, userIdentifier: string, message: string) {
+        const userId = await this.getInternalUserId(userIdentifier);
         const [resume] = await db.select({ id: resumes.id }).from(resumes)
             .where(and(eq(resumes.id, resumeId), eq(resumes.userId, userId)));
         if (!resume) throw ApiError.notFound("Resume not found");
@@ -217,16 +216,16 @@ export class DataService {
         return job;
     }
 
-    static async getGenerationJob(id: string, clerkId: string) {
-        const userId = await this.getInternalUserId(clerkId);
+    static async getGenerationJob(id: string, userIdentifier: string) {
+        const userId = await this.getInternalUserId(userIdentifier);
         const [job] = await db.select().from(generationJobs)
             .where(and(eq(generationJobs.id, id), eq(generationJobs.userId, userId)));
         if (!job) throw ApiError.notFound("Generation job not found");
         return job;
     }
 
-    static async getPdfFile(resumeId: string, clerkId: string) {
-        const userId = await this.getInternalUserId(clerkId);
+    static async getPdfFile(resumeId: string, userIdentifier: string) {
+        const userId = await this.getInternalUserId(userIdentifier);
         const [file] = await db.select({ pdfFile: resumesPdfFile.pdfFile }).from(resumesPdfFile)
             .innerJoin(resumes, eq(resumesPdfFile.resumeId, resumes.id))
             .where(and(eq(resumesPdfFile.resumeId, resumeId), eq(resumes.userId, userId)));
