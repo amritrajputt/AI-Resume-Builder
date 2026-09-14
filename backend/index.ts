@@ -18,7 +18,6 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow non-browser requests (e.g. server-to-server, curl, mobile, inngest)
     if (!origin) return callback(null, true);
 
     const cleanOrigin = origin.replace(/\/$/, "");
