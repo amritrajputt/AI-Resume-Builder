@@ -2,13 +2,11 @@ import { pgTable, text, jsonb, uuid, varchar, timestamp, uniqueIndex } from 'dri
 
 export const users = pgTable("users", {
     id: uuid("id").primaryKey().defaultRandom(),
-    clerkId: varchar("clerk_id", { length: 255 }).notNull(),
     name: varchar("name", { length: 255 }).notNull(),
     email: varchar("email", { length: 255 }).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 }, (table) => ({
-    clerkIdUnique: uniqueIndex("users_clerk_id_unique").on(table.clerkId),
     emailUnique: uniqueIndex("users_email_unique").on(table.email),
 }));
 
